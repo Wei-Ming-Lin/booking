@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* DatePicker 客製化樣式 */
+.calendar-wrapper {
+  @apply flex justify-center w-full;
+}
+
+.react-datepicker {
+  @apply font-sans !border !border-gray-200 !rounded-xl !shadow-lg !bg-white !w-[320px] !p-4 !font-sans;
+}
+
+.react-datepicker__month-container {
+  @apply !w-full;
+}
+
+.react-datepicker__header {
+  @apply !bg-white !border-0 !p-0 !mb-4;
+}
+
+.react-datepicker__current-month {
+  @apply !text-lg !text-gray-900 !font-semibold !mb-4;
+}
+
+.react-datepicker__day-names {
+  @apply !mt-0 !mb-2;
+}
+
+.react-datepicker__day-name {
+  @apply !text-gray-500 !text-sm !w-10 !h-10 !leading-10 !m-0;
+}
+
+.react-datepicker__month {
+  @apply !m-0;
+}
+
+.react-datepicker__day {
+  @apply !text-gray-700 !text-sm !w-10 !h-10 !leading-10 !m-0
+         hover:!bg-primary/10 hover:!text-primary hover:!rounded-full
+         !transition-all !duration-200 !ease-in-out;
+}
+
+.react-datepicker__day--selected {
+  @apply !bg-primary !text-white !rounded-full
+         hover:!bg-primary hover:!text-white;
+}
+
+.react-datepicker__day--disabled {
+  @apply !text-gray-300 hover:!bg-transparent hover:!text-gray-300 !cursor-not-allowed;
+}
+
+.react-datepicker__day--today {
+  @apply !font-bold !text-primary !bg-primary/10 !rounded-full;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply !bg-primary/20 !text-primary !rounded-full
+         hover:!bg-primary hover:!text-white;
+}
+
+.react-datepicker__navigation {
+  @apply !top-4;
+}
+
+.react-datepicker__navigation--previous {
+  @apply !left-4;
+}
+
+.react-datepicker__navigation--next {
+  @apply !right-4;
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply !border-gray-400 !transition-all !duration-200 !ease-in-out;
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  @apply !border-primary;
+}
+
+/* 週末特殊樣式 */
+.react-datepicker__day--weekend {
+  @apply !text-red-500;
+}
+
+.react-datepicker__day--weekend.react-datepicker__day--disabled {
+  @apply !text-red-200;
+}
+
+/* 相鄰月份的日期 */
+.react-datepicker__day--outside-month {
+  @apply !text-gray-300;
+}
+
+/* 移動設備觸摸優化 */
+@media (hover: none) and (pointer: coarse) {
+  /* 移除hover效果，防止在觸摸設備上出現問題 */
+  button:hover {
+    @apply bg-inherit;
+  }
+  
+  /* 增加按鈕的點擊區域 - 但不影響小按鈕 */
+  button:not([class*="min-h-"]) {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* 確保適當的觸摸反饋 */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* iOS Safari 特殊優化 */
+@supports (-webkit-touch-callout: none) {
+  /* 防止雙擊縮放 */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* 防止觸摸時出現高亮 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* 確保彈窗在iOS上正確顯示 */
+  .fixed {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* 防止觸摸時出現藍色高亮框 */
+button, a, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+/* 確保按鈕有足夠的觸摸區域 */
+@layer utilities {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+} 
