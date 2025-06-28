@@ -18,7 +18,8 @@
 - **使用者管理** - 管理用戶權限
 - **限制規則** - 設定使用限制（年份、使用次數等）
 - **系統通知** - 發布重要公告和維護通知
-- **日曆檢視** - 以月曆形式查看所有預約
+- **日曆檢視** - 以月曆形式查看所有預約，支援機器篩選
+- **隱私保護** - 預約者姓名匿名化顯示（如「張O由」）
 
 ### 技術特色
 - **衝突檢測** - 防止重複預約同一時段
@@ -48,41 +49,43 @@
 
 ### 部署 (Deployment)
 - **Containerization**: Docker & Docker Compose
-- **Database**: PostgreSQL 15
-- **Frontend Deployment**: Cloudflare Pages support
+- **Database**: PostgreSQL 15 (Docker container)
+- **Frontend Deployment**: Docker container
 - **Backend Deployment**: Docker container
+- **架構**: 微服務架構，前後端分離
 
 ## 📁 專案結構
 
 ```
 booking/
 ├── booking_fromtend/             # Next.js 前端專案
-│   └── RWD_booking/
-│       ├── src/                  # 前端源碼
-│       │   ├── app/              # App Router 頁面
-│       │   │   ├── admin/        # 管理員頁面
-│       │   │   ├── api/          # API 路由
-│       │   │   ├── login/        # 登入頁面
-│       │   │   ├── machine/      # 機器相關頁面
-│       │   │   └── profile/      # 用戶資料頁面
-│       │   ├── components/       # React 組件
-│       │   ├── hooks/            # 自定義 Hooks
-│       │   ├── lib/              # 工具函數和配置
-│       │   ├── services/         # API 服務
-│       │   ├── store/            # 狀態管理 (Zustand)
-│       │   └── types/            # TypeScript 類型定義
-│       ├── public/               # 靜態資源
-│       ├── package.json          # Node.js 依賴
-│       ├── tsconfig.json         # TypeScript 配置
-│       ├── tailwind.config.js    # Tailwind CSS 配置
-│       ├── Dockerfile            # 前端 Docker 配置
-│       └── env.example           # 環境變數範例
+│   ├── src/                      # 前端源碼
+│   │   ├── app/                  # App Router 頁面
+│   │   │   ├── admin/            # 管理員頁面
+│   │   │   ├── api/              # API 路由
+│   │   │   ├── bookings/         # 預約日曆頁面
+│   │   │   ├── login/            # 登入頁面
+│   │   │   ├── machine/          # 機器相關頁面
+│   │   │   └── profile/          # 用戶資料頁面
+│   │   ├── components/           # React 組件
+│   │   ├── hooks/                # 自定義 Hooks
+│   │   ├── lib/                  # 工具函數和配置
+│   │   ├── services/             # API 服務
+│   │   ├── store/                # 狀態管理 (Zustand)
+│   │   └── types/                # TypeScript 類型定義
+│   ├── public/                   # 靜態資源
+│   ├── package.json              # Node.js 依賴
+│   ├── tsconfig.json             # TypeScript 配置
+│   ├── tailwind.config.js        # Tailwind CSS 配置
+│   ├── Dockerfile                # 前端 Docker 配置
+│   ├── docker-compose.yml        # 前端 Docker Compose 配置
+│   └── env.example               # 環境變數範例
 ├── booking_backend/              # Flask 後端專案
 │   ├── app.py                    # Flask 主程式
 │   ├── init.sql                  # 數據庫初始化腳本
 │   ├── requirements.txt          # Python 依賴
 │   ├── Dockerfile                # 後端 Docker 配置
-│   ├── docker-compose.yml        # Docker Compose 配置
+│   ├── docker-compose.yml        # 完整系統 Docker Compose 配置
 │   ├── .env_example              # 環境變數範例
 │   └── pgdata/                   # PostgreSQL 數據目錄
 └── README.md                     # 專案說明 (本文件)
@@ -92,43 +95,42 @@ booking/
 
 ### 1. 環境準備
 
-#### 前端環境
+確保已安裝以下軟體：
+- Docker 20.0+
+- Docker Compose 2.0+
+- Git
+
+#### 克隆專案
 ```bash
-cd booking_fromtend/RWD_booking
-npm install
+git clone <repository-url>
+cd booking
 ```
 
-#### 後端環境
+### 2. 環境配置
+
+#### 後端環境變數設置
 ```bash
 cd booking_backend
-pip install -r requirements.txt
-```
-
-### 2. 數據庫設置
-
-#### 使用 Docker (推薦)
-```bash
-cd booking_backend
-# 複製環境變數文件
+# 複製環境變數範例檔案
 cp .env_example .env
 
-# 編輯 .env 文件並設置數據庫密碼
-# 啟動數據庫和後端服務
-docker-compose up -d
+# 編輯 .env 檔案，設置資料庫密碼等
+nano .env
 ```
 
-#### 手動設置
+#### 前端環境變數設置  
 ```bash
-# 創建 PostgreSQL 數據庫
-createdb booking_system
+cd booking_fromtend
+# 複製環境變數範例檔案
+cp env.example .env
 
-# 執行初始化腳本
-psql -U postgres -d booking_system -f booking_backend/init.sql
+# 編輯 .env 檔案，設置 Google OAuth 等
+nano .env
 ```
 
-### 3. 環境配置
+### 3. 環境變數詳細配置
 
-#### 前端配置 (`booking_fromtend/RWD_booking/.env.local`)
+#### 前端配置 (`booking_fromtend/.env`)
 ```env
 # Next.js 配置
 NEXTAUTH_URL=http://localhost:3000
@@ -144,47 +146,59 @@ API_URL=http://localhost:5000
 
 #### 後端配置 (`booking_backend/.env`)
 ```env
-# PostgreSQL 資訊
+# PostgreSQL 容器資訊
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_password
+POSTGRES_PASSWORD=your_strong_password
 POSTGRES_DB=booking_system
 
-# backend 服務用來連資料庫
+# Flask 應用資料庫連接
 DB_NAME=booking_system
 DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=localhost
+DB_PASSWORD=your_strong_password
+DB_HOST=db  # Docker Compose 服務名稱
 DB_PORT=5432
 ```
 
-### 4. 啟動服務
+### 4. 部署服務
 
-#### 開發模式
+#### 方式一：完整 Docker Compose 部署 (推薦)
 ```bash
-# 啟動前端 (Terminal 1)
-cd booking_fromtend/RWD_booking
-npm run dev
-
-# 啟動後端 (Terminal 2)
+# 啟動後端服務 (包含資料庫)
 cd booking_backend
-python app.py
+docker-compose up -d
+
+# 啟動前端服務
+cd ../booking_fromtend
+docker-compose up -d
 ```
 
-#### 使用 Docker
+#### 方式二：混合部署 (開發模式)
 ```bash
-# 啟動所有服務
+# 僅啟動後端和資料庫
 cd booking_backend
-docker-compose up
+docker-compose up -d
 
-# 前端需要單獨啟動
-cd booking_fromtend/RWD_booking
+# 前端使用開發模式
+cd ../booking_fromtend
+npm install
 npm run dev
+```
+
+#### 查看服務狀態
+```bash
+# 查看後端服務
+cd booking_backend
+docker-compose ps
+
+# 查看前端服務
+cd ../booking_fromtend
+docker-compose ps
 ```
 
 系統將在以下地址運行：
-- 前端: http://localhost:3000
-- 後端 API: http://localhost:5000
-- 數據庫: localhost:5432
+- 🌐 前端應用: http://localhost:3000
+- 🔧 後端 API: http://localhost:5000
+- 🗄️ PostgreSQL: localhost:5432
 
 ## 📖 功能說明
 
@@ -192,6 +206,14 @@ npm run dev
 - **時段制**: 每天分為 6 個 4 小時時段 (00:00-04:00, 04:00-08:00, ...)
 - **即時更新**: 自動刷新避免衝突
 - **狀態管理**: active(活躍), cancelled(已取消), completed(已完成), no_show(未出席)
+- **雙重API**: 預約介面（隱私保護）和日曆檢視（匿名化顯示）
+
+### API 端點
+- `GET /machines` - 取得機器清單
+- `GET /bookings/machine/{id}` - 取得機器預約（僅時段資訊）
+- `GET /bookings/calendar-view` - 取得日曆檢視預約（含匿名化姓名）
+- `POST /bookings` - 建立預約
+- `DELETE /bookings/{id}` - 取消預約
 
 ### 限制規則
 - **年份限制**: 限制特定入學年份的學生使用
@@ -223,19 +245,56 @@ ANALYZE;
 - 檢查活躍通知: 查詢 `active_notifications` 視圖
 - 分析機器使用率: 查詢 `machine_usage_stats` 視圖
 
-## 🐳 Docker 部署
+## 🐳 Docker 部署詳細說明
 
-### 完整部署 (後端 + 數據庫)
+### 後端系統 (API + Database)
 ```bash
 cd booking_backend
+# 建構並啟動所有後端服務
 docker-compose up -d
+
+# 查看服務日誌
+docker-compose logs -f
+
+# 停止服務
+docker-compose down
 ```
 
-### 前端部署 (Cloudflare Pages)
+### 前端系統 (Next.js Application)
 ```bash
-cd booking_fromtend/RWD_booking
-npm run pages:build
-npm run pages:deploy
+cd booking_fromtend
+# 建構並啟動前端服務
+docker-compose up -d
+
+# 查看建構日誌
+docker-compose logs -f app
+
+# 重新建構映像
+docker-compose build --no-cache
+```
+
+### 資料庫管理
+```bash
+# 進入 PostgreSQL 容器
+cd booking_backend
+docker-compose exec db psql -U postgres -d booking_system
+
+# 備份資料庫
+docker-compose exec db pg_dump -U postgres booking_system > backup.sql
+
+# 還原資料庫
+docker-compose exec -T db psql -U postgres booking_system < backup.sql
+```
+
+### 容器資源監控
+```bash
+# 查看容器狀態
+docker ps
+docker stats
+
+# 查看容器詳細資訊
+docker-compose ps
+docker-compose top
 ```
 
 ## 🔐 權限管理
@@ -254,14 +313,29 @@ npm run pages:deploy
 ## 🤝 開發指南
 
 ### 技術要求
-- Node.js 18+
-- Python 3.8+
-- PostgreSQL 12+
-- Docker (可選)
+- Docker 20.0+
+- Docker Compose 2.0+
+- Node.js 18+ (可選，用於本地開發)
+- Python 3.8+ (可選，用於本地開發)
+- PostgreSQL 12+ (透過 Docker 運行)
+
+### Docker 開發工作流程
+```bash
+# 開發模式：即時重載
+cd booking_backend
+docker-compose up  # 不使用 -d 以查看即時日誌
+
+# 修改程式碼後重新啟動特定服務
+docker-compose restart backend
+
+# 清理未使用的映像和容器
+docker system prune -f
+```
 
 ### 代碼風格
 - 前端: TypeScript + ESLint + Prettier
 - 後端: Python PEP 8
+- 容器: Multi-stage builds for optimization
 
 ### 提交規範
 - feat: 新功能
@@ -269,17 +343,65 @@ npm run pages:deploy
 - docs: 文檔更新
 - style: 代碼格式化
 - refactor: 代碼重構
+- docker: 容器相關變更
 
 ## 📄 授權
 
 本專案採用 MIT 授權條款。
 
+## 🔧 疑難排解
+
+### Docker 常見問題
+
+#### 容器無法啟動
+```bash
+# 檢查容器日誌
+docker-compose logs [service_name]
+
+# 檢查端口衝突
+netstat -tulpn | grep :5000
+netstat -tulpn | grep :3000
+```
+
+#### 資料庫連接問題
+```bash
+# 確認資料庫容器正在運行
+docker-compose ps db
+
+# 手動測試資料庫連接
+docker-compose exec backend python -c "import psycopg2; print('DB OK')"
+```
+
+#### 前端建構失敗
+```bash
+# 清除 Node.js 緩存
+cd booking_fromtend
+docker-compose down
+docker-compose build --no-cache
+```
+
+#### 權限問題
+```bash
+# 修復 pgdata 目錄權限
+sudo chown -R 999:999 booking_backend/pgdata
+```
+
+### 效能調優
+```bash
+# 限制容器記憶體使用
+# 在 docker-compose.yml 中添加：
+# mem_limit: 512m
+# mem_reservation: 256m
+```
+
 ## 📞 支援
 
 如有問題請：
-1. 查看 Issues 中的常見問題
-2. 創建新的 Issue 描述問題
-3. 聯繫系統管理員
+1. 查看上方疑難排解部分
+2. 檢查 Docker 和 Docker Compose 版本
+3. 查看 Issues 中的常見問題
+4. 創建新的 Issue 並附上相關日誌
+5. 聯繫系統管理員
 
 ---
 
