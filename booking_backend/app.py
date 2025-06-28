@@ -724,11 +724,12 @@ def get_machine_bookings(machine_id):
         conn = get_db_conn()
         cur = conn.cursor(cursor_factory=RealDictCursor)
         
-        # 獲取所有 active 狀態的預約
+        # 獲取所有 active 狀態的預約，同時查詢用戶姓名
         query = """
-            SELECT id, user_email, time_slot, status, machine_id, created_at
-            FROM bookings
-            WHERE machine_id = %s AND status = 'active'
+            SELECT b.id, b.user_email, b.time_slot, b.status, b.machine_id, b.created_at, u.name as user_name
+            FROM bookings b
+            LEFT JOIN users u ON b.user_email = u.email
+            WHERE b.machine_id = %s AND b.status = 'active'
         """
         params = [machine_id]
         
@@ -759,9 +760,33 @@ def get_machine_bookings(machine_id):
             time_slot_formatted = time_slot_dt.strftime('%Y-%m-%d-%H:%M')
             booked_slots.append(time_slot_formatted)
             
+            # 格式化用戶姓名以保護隱私
+            raw_user_name = booking.get('user_name', '')
+            logger.info(f"Raw user name from DB: '{raw_user_name}' for email: {booking['user_email']}")
+            
+            # 如果沒有真實姓名，從郵箱生成格式化姓名
+            if not raw_user_name or raw_user_name.strip() == '':
+                user_email = booking['user_email'] or ''
+                if user_email:
+                    email_username = user_email.split('@')[0]
+                    if len(email_username) >= 2:
+                        if len(email_username) == 2:
+                            user_display_name = email_username[0] + 'O'
+                        else:
+                            user_display_name = email_username[0] + 'O' + email_username[-1]
+                    else:
+                        user_display_name = email_username + 'O'
+                else:
+                    user_display_name = '匿名用戶'
+            else:
+                user_display_name = format_user_name_for_display(raw_user_name)
+            
+            logger.info(f"Final display name: '{user_display_name}'")
+            
             booking_details.append({
                 'id': str(booking['id']),
                 'user_email': booking['user_email'],
+                'user_display_name': user_display_name,  # 新增格式化的顯示名稱
                 'time_slot': time_slot_formatted,
                 'status': booking['status'],
                 'machine_id': str(booking['machine_id']),
@@ -791,16 +816,17 @@ def get_machine_bookings(machine_id):
         cooldown_slots = []
         usage_info = {}
         
-        # 為安全起見，只返回當前用戶可以操作的預約詳情
+        # 處理預約詳情顯示，其他用戶顯示格式化姓名
         safe_booking_details = []
         for detail in booking_details:
             detail_copy = detail.copy()
             # 標準化預約用戶郵箱用於比較
             booking_user_email = (detail['user_email'] or '').strip().lower()
             
-            # 如果不是自己的預約，隱藏用戶郵箱信息
+            # 如果不是自己的預約，隱藏用戶郵箱但顯示格式化姓名
             if booking_user_email != current_user_email:
                 detail_copy['user_email'] = 'hidden'  # 隱藏其他用戶的郵箱
+                # user_display_name 保持不變，顯示格式化的姓名
             
             safe_booking_details.append(detail_copy)
         
@@ -936,6 +962,111 @@ def get_user_bookings(user_email):
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
         return jsonify({'error': 'Internal server error'}), 500
+    finally:
+        if 'cur' in locals():
+            cur.close()
+        if 'conn' in locals():
+            conn.close()
+
+@app.route('/bookings/calendar', methods=['GET'])
+def get_calendar_bookings():
+    """
+    獲取日曆頁面需要的簡化預約資料
+    返回格式化用戶名稱和時段信息
+    """
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        
+        # 獲取查詢參數
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        machine_ids = request.args.getlist('machine_ids')  # 支援多個機器ID
+        
+        # 建構查詢條件
+        query = """
+            SELECT 
+                b.id,
+                b.machine_id,
+                b.user_email,
+                u.user_name,
+                b.time_slot,
+                b.status,
+                m.name as machine_name
+            FROM bookings b
+            LEFT JOIN users u ON b.user_email = u.email
+            LEFT JOIN machines m ON b.machine_id = m.id
+            WHERE b.status = 'active'
+        """
+        params = []
+        
+        # 添加日期篩選
+        if start_date and end_date:
+            query += " AND b.time_slot BETWEEN %s AND %s"
+            params.extend([start_date, end_date])
+        
+        # 添加機器篩選
+        if machine_ids:
+            placeholders = ','.join(['%s'] * len(machine_ids))
+            query += f" AND b.machine_id IN ({placeholders})"
+            params.extend(machine_ids)
+        
+        query += " ORDER BY b.time_slot"
+        
+        cur.execute(query, params)
+        bookings = cur.fetchall()
+        
+        # 格式化資料
+        calendar_bookings = []
+        for booking in bookings:
+            # 處理時間格式
+            time_slot_dt = booking['time_slot']
+            if time_slot_dt.tzinfo is None:
+                time_slot_dt = TAIPEI_TZ.localize(time_slot_dt)
+            else:
+                time_slot_dt = time_slot_dt.astimezone(TAIPEI_TZ)
+            
+            # 格式化用戶姓名
+            raw_user_name = booking.get('user_name', '')
+            if not raw_user_name or raw_user_name.strip() == '':
+                # 從郵箱生成格式化姓名
+                user_email = booking['user_email'] or ''
+                if user_email:
+                    email_username = user_email.split('@')[0]
+                    if len(email_username) >= 2:
+                        if len(email_username) == 2:
+                            user_display_name = email_username[0] + 'O'
+                        else:
+                            user_display_name = email_username[0] + 'O' + email_username[-1]
+                    else:
+                        user_display_name = email_username + 'O'
+                else:
+                    user_display_name = '匿名用戶'
+            else:
+                user_display_name = format_user_name_for_display(raw_user_name)
+            
+            calendar_bookings.append({
+                'id': str(booking['id']),
+                'machine_id': str(booking['machine_id']),
+                'machine_name': booking['machine_name'],
+                'user_email': booking['user_email'],
+                'user_display_name': user_display_name,
+                'time_slot': time_slot_dt.strftime('%Y-%m-%d-%H:%M'),
+                'status': booking['status']
+            })
+        
+        logger.info(f"Retrieved {len(calendar_bookings)} calendar bookings")
+        return jsonify({
+            'bookings': calendar_bookings,
+            'total': len(calendar_bookings)
+        }), 200
+        
+    except psycopg2.Error as e:
+        logger.error(f"Database error in calendar bookings: {e}")
+        return jsonify({'error': 'Database error', 'detail': str(e)}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in calendar bookings: {e}")
+        return jsonify({'error': 'Internal server error', 'detail': str(e)}), 500
     finally:
         if 'cur' in locals():
             cur.close()
@@ -4326,6 +4457,26 @@ def after_request(response):
         response.headers['Last-Modified'] = 'Wed, 21 Oct 2015 07:28:00 GMT'
     
     return response
+
+def format_user_name_for_display(full_name):
+    """
+    將用戶姓名格式化為隱私保護格式
+    例如: "張三由" -> "張O由", "李四" -> "李O", "王小明" -> "王O明"
+    """
+    if not full_name or len(full_name) < 1:
+        return "匿名用戶"
+    
+    full_name = full_name.strip()
+    
+    if len(full_name) == 1:
+        return full_name + "O"
+    elif len(full_name) == 2:
+        return full_name[0] + "O"
+    elif len(full_name) == 3:
+        return full_name[0] + "O" + full_name[2]
+    else:
+        # 對於超過3個字的姓名，保留第一個和最後一個字
+        return full_name[0] + "O" + full_name[-1]
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
