@@ -197,6 +197,41 @@ export const api = {
 
   // 預約相關
   bookings: {
+    // 獲取日曆視圖專用的預約資料 (包含格式化用戶姓名)
+    getCalendarViewBookings: async (params: {
+      startDate: string;
+      endDate: string;
+      machineIds?: string[];
+    }): Promise<{
+      bookings: Array<{
+        id: string;
+        machine_id: string;
+        machine_name: string;
+        user_email: string;
+        user_display_name: string;
+        time_slot: string;
+        status: string;
+        created_at: string;
+      }>;
+      total: number;
+    }> => {
+      const { API_URL } = await import('@/config/api');
+      const url = new URL(`${API_URL}/bookings/calendar-view`);
+      
+      // 添加查詢參數
+      url.searchParams.append('start_date', params.startDate);
+      url.searchParams.append('end_date', params.endDate);
+      
+      // 添加機器ID參數（支援多個）
+      if (params.machineIds && params.machineIds.length > 0) {
+        params.machineIds.forEach(id => {
+          url.searchParams.append('machine_ids', id);
+        });
+      }
+      
+      return fetchWithAuth(url.toString());
+    },
+
     // 創建預約
     create: async (params: {
       user_email: string;

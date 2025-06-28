@@ -134,10 +134,10 @@ export default function TimeSlotSelector({
     const slotId = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
 
     if (!isWithinInterval(date, { start: dateRange.min, end: dateRange.max })) {
-      return { status: '未開放', disabled: true };
+      return { status: '未開放', disabled: true, isOwnBooking: false, isOthersBooking: false };
     }
     if (isBefore(slotDate, now)) {
-      return { status: '已過期', disabled: true };
+      return { status: '已過期', disabled: true, isOwnBooking: false, isOthersBooking: false };
     }
     
     // 檢查特定時間段是否在冷卻期內
@@ -146,7 +146,7 @@ export default function TimeSlotSelector({
       const backendSlotFormat = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
       
       if (cooldownSlots.includes(backendSlotFormat)) {
-        return { status: '冷卻', disabled: true };
+        return { status: '冷卻', disabled: true, isOwnBooking: false, isOthersBooking: false };
       }
     }
     
@@ -168,22 +168,26 @@ export default function TimeSlotSelector({
             status: '已預約(可取消)', 
             disabled: false, // 自己的預約可以點擊取消
             isOwnBooking: true,
+            isOthersBooking: false,
             bookingId: bookingDetail.id
           };
         } else {
+          // 顯示其他用戶的格式化姓名
+          const displayName = bookingDetail.user_display_name || '已預約';
           return { 
-            status: '已預約', 
+            status: displayName, 
             disabled: true, // 別人的預約不能點擊
-            isOwnBooking: false 
+            isOwnBooking: false,
+            isOthersBooking: true
           };
         }
       } else {
         // 沒有找到詳細信息，為安全起見，設為不可點擊
-        return { status: '已預約', disabled: true };
+        return { status: '已預約', disabled: true, isOwnBooking: false, isOthersBooking: false };
       }
     }
     
-    return { status: '可預約', disabled: false };
+    return { status: '可預約', disabled: false, isOwnBooking: false, isOthersBooking: false };
   };
 
   return (
@@ -215,7 +219,8 @@ export default function TimeSlotSelector({
               {timeSlot.time}
             </div>
             {weekDates.map((date) => {
-              const { status, disabled } = getSlotStatus(date, timeSlot);
+              const statusInfo = getSlotStatus(date, timeSlot);
+              const { status, disabled, isOwnBooking, isOthersBooking } = statusInfo;
               const slotId = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
               const isSelected = slotId === selectedSlotId;
 
@@ -225,20 +230,25 @@ export default function TimeSlotSelector({
                   onClick={() => handleSlotClick(date, timeSlot)}
                   disabled={disabled}
                   className={`
-                    relative py-2 px-4 rounded-lg text-sm
+                    relative py-2 px-4 rounded-lg text-xs font-medium
                     transform transition-all duration-200
                     ${
                       disabled
                         ? status === '冷卻'
                           ? 'bg-orange-100 text-orange-600 cursor-not-allowed hover:shadow-none border border-orange-300'
+                          : isOwnBooking
+                          ? 'bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 border border-blue-300'
+                          : isOthersBooking
+                          ? 'bg-red-50 text-red-600 cursor-not-allowed hover:shadow-none border border-red-200'
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed hover:shadow-none'
                         : isSelected
                         ? 'bg-primary text-white ring-2 ring-primary ring-offset-2 scale-105 hover:bg-primary-dark'
                         : 'bg-white border border-gray-200 hover:border-primary hover:text-primary hover:shadow-md hover:-translate-y-0.5'
                     }
                   `}
+                  title={isOthersBooking ? `已被 ${status} 預約` : status}
                 >
-                  <span className="relative z-10">{status}</span>
+                  <span className="relative z-10 leading-tight">{status}</span>
                   {status === '冷卻' && (
                     <div className="absolute inset-0 bg-orange-200 opacity-30 rounded-lg"></div>
                   )}

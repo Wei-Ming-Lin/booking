@@ -760,28 +760,8 @@ def get_machine_bookings(machine_id):
             time_slot_formatted = time_slot_dt.strftime('%Y-%m-%d-%H:%M')
             booked_slots.append(time_slot_formatted)
             
-            # 格式化用戶姓名以保護隱私
-            raw_user_name = booking.get('user_name', '')
-            logger.info(f"Raw user name from DB: '{raw_user_name}' for email: {booking['user_email']}")
-            
-            # 如果沒有真實姓名，從郵箱生成格式化姓名
-            if not raw_user_name or raw_user_name.strip() == '':
-                user_email = booking['user_email'] or ''
-                if user_email:
-                    email_username = user_email.split('@')[0]
-                    if len(email_username) >= 2:
-                        if len(email_username) == 2:
-                            user_display_name = email_username[0] + 'O'
-                        else:
-                            user_display_name = email_username[0] + 'O' + email_username[-1]
-                    else:
-                        user_display_name = email_username + 'O'
-                else:
-                    user_display_name = '匿名用戶'
-            else:
-                user_display_name = format_user_name_for_display(raw_user_name)
-            
-            logger.info(f"Final display name: '{user_display_name}'")
+            # 預約介面不需要顯示用戶姓名，只返回空字符串
+            user_display_name = ''
             
             booking_details.append({
                 'id': str(booking['id']),
@@ -968,11 +948,13 @@ def get_user_bookings(user_email):
         if 'conn' in locals():
             conn.close()
 
-@app.route('/bookings/calendar', methods=['GET'])
-def get_calendar_bookings():
+
+@app.route('/bookings/calendar-view', methods=['GET'])
+def get_calendar_view_bookings():
     """
-    獲取日曆頁面需要的簡化預約資料
-    返回格式化用戶名稱和時段信息
+    專門為日曆頁面提供的API
+    返回格式化用戶姓名和完整預約資訊
+    與預約介面的API分離，避免洩露敏感資訊
     """
     try:
         conn = get_db_conn()
@@ -989,9 +971,10 @@ def get_calendar_bookings():
                 b.id,
                 b.machine_id,
                 b.user_email,
-                u.user_name,
+                u.name as user_name,
                 b.time_slot,
                 b.status,
+                b.created_at,
                 m.name as machine_name
             FROM bookings b
             LEFT JOIN users u ON b.user_email = u.email
@@ -1026,7 +1009,7 @@ def get_calendar_bookings():
             else:
                 time_slot_dt = time_slot_dt.astimezone(TAIPEI_TZ)
             
-            # 格式化用戶姓名
+            # 格式化用戶姓名以保護隱私
             raw_user_name = booking.get('user_name', '')
             if not raw_user_name or raw_user_name.strip() == '':
                 # 從郵箱生成格式化姓名
@@ -1045,27 +1028,38 @@ def get_calendar_bookings():
             else:
                 user_display_name = format_user_name_for_display(raw_user_name)
             
+            # 處理created_at時間
+            created_at_iso = None
+            if booking['created_at']:
+                created_at_dt = booking['created_at']
+                if created_at_dt.tzinfo is None:
+                    created_at_dt = TAIPEI_TZ.localize(created_at_dt)
+                else:
+                    created_at_dt = created_at_dt.astimezone(TAIPEI_TZ)
+                created_at_iso = created_at_dt.isoformat()
+            
             calendar_bookings.append({
                 'id': str(booking['id']),
                 'machine_id': str(booking['machine_id']),
                 'machine_name': booking['machine_name'],
-                'user_email': booking['user_email'],
-                'user_display_name': user_display_name,
+                'user_email': 'hidden',  # 隱藏真實郵箱
+                'user_display_name': user_display_name,  # 顯示格式化姓名
                 'time_slot': time_slot_dt.strftime('%Y-%m-%d-%H:%M'),
-                'status': booking['status']
+                'status': booking['status'],
+                'created_at': created_at_iso
             })
         
-        logger.info(f"Retrieved {len(calendar_bookings)} calendar bookings")
+        logger.info(f"Retrieved {len(calendar_bookings)} calendar view bookings")
         return jsonify({
             'bookings': calendar_bookings,
             'total': len(calendar_bookings)
         }), 200
         
     except psycopg2.Error as e:
-        logger.error(f"Database error in calendar bookings: {e}")
+        logger.error(f"Database error in calendar view bookings: {e}")
         return jsonify({'error': 'Database error', 'detail': str(e)}), 500
     except Exception as e:
-        logger.error(f"Unexpected error in calendar bookings: {e}")
+        logger.error(f"Unexpected error in calendar view bookings: {e}")
         return jsonify({'error': 'Internal server error', 'detail': str(e)}), 500
     finally:
         if 'cur' in locals():

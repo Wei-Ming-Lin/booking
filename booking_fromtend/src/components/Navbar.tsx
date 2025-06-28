@@ -3,7 +3,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
 import { useUserStore } from '@/store/userStore';
 
 export default function Navbar() {
@@ -34,6 +34,16 @@ export default function Navbar() {
             <Link href="/" className="flex items-center space-x-2">
               <span className="text-xl font-bold text-primary">機器預約系統</span>
             </Link>
+            
+            {/* 查看預約情況按鈕，所有登入用戶都可見 */}
+            <Link
+              href="/bookings"
+              className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium"
+            >
+              <CalendarDaysIcon className="h-5 w-5" />
+              <span>查看預約情況</span>
+            </Link>
+            
             {/* 管理按鈕，只有管理員和經理可見 */}
             {(isAdmin || isManager) && (
               <Link
