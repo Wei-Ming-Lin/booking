@@ -985,7 +985,8 @@ def get_calendar_view_bookings():
         
         # 添加日期篩選
         if start_date and end_date:
-            query += " AND b.time_slot BETWEEN %s AND %s"
+            # 確保包含結束日期的所有時間 (到23:59:59)
+            query += " AND DATE(b.time_slot) BETWEEN %s AND %s"
             params.extend([start_date, end_date])
         
         # 添加機器篩選

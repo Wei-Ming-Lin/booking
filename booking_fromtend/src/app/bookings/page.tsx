@@ -35,6 +35,8 @@ export default function BookingsPage() {
   const [cancellingBookingId, setCancellingBookingId] = useState<string | null>(null);
   const [selectedMachines, setSelectedMachines] = useState<Set<string>>(new Set());
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
+  const [showDateDetails, setShowDateDetails] = useState(false);
+  const [selectedDateDetails, setSelectedDateDetails] = useState<{date: Date, bookings: BookingWithMachine[]} | null>(null);
 
   // 載入機器列表
   useEffect(() => {
@@ -415,6 +417,12 @@ export default function BookingsPage() {
                           ? 'bg-blue-50' 
                           : 'bg-white'
                       }`}
+                      onClick={() => {
+                        if (isCurrentMonth) {
+                          setSelectedDateDetails({ date: day, bookings: getBookingsForDate(day) });
+                          setShowDateDetails(true);
+                        }
+                      }}
                     >
                       {/* 日期 */}
                       <div className={`text-sm font-medium mb-2 ${
@@ -503,6 +511,68 @@ export default function BookingsPage() {
           )}
         </div>
       </div>
+      {showDateDetails && selectedDateDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-medium text-gray-900">
+                  {format(selectedDateDetails.date, 'yyyy年M月d日 (EEEE)', { locale: zhTW })} 預約詳情
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  共 {selectedDateDetails.bookings.length} 筆預約
+                </p>
+              </div>
+              <button
+                onClick={() => setShowDateDetails(false)}
+                className="p-2 hover:bg-gray-100 rounded-md"
+              >
+                <span className="sr-only">關閉</span>
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
+              {selectedDateDetails.bookings.length === 0 ? (
+                <div className="text-center py-12">
+                  <span className="text-4xl mb-4">📅</span>
+                  <p className="text-lg text-gray-500">該日無預約</p>
+                  <p className="text-sm text-gray-400 mt-2">選擇的日期沒有任何預約記錄</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {selectedDateDetails.bookings.map((booking) => (
+                    <div key={booking.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{booking.machine_name}</div>
+                          <div className="text-sm text-gray-600">{formatTimeSlot(booking.time_slot)}</div>
+                          <div className="text-sm text-gray-600">{booking.user_display_name}</div>
+                          <div className="text-xs text-gray-400">{booking.user_email !== 'hidden' ? booking.user_email : ''}</div>
+                        </div>
+                        {/* 你的預約可顯示取消按鈕 */}
+                        {booking.user_email !== 'hidden' && session?.user?.email && booking.user_email.toLowerCase().trim() === session.user.email.toLowerCase().trim() && parseTimeSlot(booking.time_slot) > new Date() && (
+                          <button
+                            onClick={() => {
+                              if (confirm(`確定要取消這個預約嗎？\n${booking.machine_name}\n${formatTimeSlot(booking.time_slot)}`)) {
+                                handleCancelBooking(booking.id);
+                              }
+                            }}
+                            className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                          >
+                            取消
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 } 
