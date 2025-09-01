@@ -100,6 +100,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('');
+  const [loadingUsers, setLoadingUsers] = useState(false);
   
   // 預約管理相關狀態
   const [bookings, setBookings] = useState<BookingDetail[]>([]);
@@ -115,11 +116,14 @@ export default function AdminPage() {
   const [showYearMonthPicker, setShowYearMonthPicker] = useState(false);
   const [tempYear, setTempYear] = useState(currentYear);
   const [tempMonth, setTempMonth] = useState(currentMonth);
+  const [loadingBookings, setLoadingBookings] = useState(false);
+  const [bookingMessage, setBookingMessage] = useState<{type: 'success' | 'error' | null, text: string}>({type: null, text: ''});
 
   // 通知管理相關狀態
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotificationForm, setShowNotificationForm] = useState(false);
   const [editingNotification, setEditingNotification] = useState<Notification | null>(null);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
   
   // 機器管理相關狀態
   const [machines, setMachines] = useState<Machine[]>([]);
@@ -165,20 +169,26 @@ export default function AdminPage() {
   // 監聽標籤切換時加載對應數據
   useEffect(() => {
     if (currentUserRole && ['manager', 'admin'].includes(currentUserRole)) {
-      if (activeTab === 'notifications') {
+      if (activeTab === 'users' && users.length === 0 && !loadingUsers) {
+        fetchUsers();
+      } else if (activeTab === 'notifications' && notifications.length === 0 && !loadingNotifications) {
         fetchNotifications();
-      } else if (activeTab === 'machines') {
+      } else if (activeTab === 'machines' && machines.length === 0 && !loadingMachines) {
         fetchMachines();
-      } else if (activeTab === 'bookings') {
-        fetchBookings();
+      } else if (activeTab === 'bookings' && !loadingBookings) {
         fetchMonthlyStats(currentYear, currentMonth);
       }
     }
-  }, [activeTab, currentUserRole, currentYear, currentMonth]);
+  }, [activeTab, currentUserRole]);
 
   // 監聽月份/年份變化
   useEffect(() => {
     if (activeTab === 'bookings' && currentUserRole && ['manager', 'admin'].includes(currentUserRole)) {
+      // 清空之前的預約資料，避免顯示混淆的資料
+      setBookings([]);
+      setSelectedDateBookings([]);
+      setShowDateDetails(false);
+      
       fetchMonthlyStats(currentYear, currentMonth);
     }
   }, [currentYear, currentMonth]);
@@ -200,13 +210,8 @@ export default function AdminPage() {
         return;
       }
 
-      // 權限驗證通過，加載數據
-      await Promise.all([
-        fetchUsers(),
-        fetchBookings(),
-        fetchNotifications(),
-        fetchMachines()
-      ]);
+      // 權限驗證通過，不預先載入任何資料
+      // 所有資料將在用戶切換到對應標籤時按需載入
       
     } catch (error) {
       console.error('獲取用戶角色失敗:', error);
@@ -219,6 +224,9 @@ export default function AdminPage() {
 
   // 獲取所有用戶
   const fetchUsers = async () => {
+    if (loadingUsers) return; // 防止重複請求
+    
+    setLoadingUsers(true);
     try {
       // 這裡需要新的API端點來獲取所有用戶
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000'}/admin/users`, {
@@ -236,11 +244,18 @@ export default function AdminPage() {
     } catch (error) {
       console.error('獲取用戶列表失敗:', error);
       showError('獲取用戶列表失敗');
+    } finally {
+      setLoadingUsers(false);
     }
   };
 
   // 獲取所有預約
   const fetchBookings = async () => {
+    if (loadingBookings) return; // 防止重複請求
+    
+    setLoadingBookings(true);
+    setBookingMessage({type: null, text: '正在獲取預約資料...'});
+    
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000'}/admin/bookings`, {
         headers: {
@@ -254,14 +269,31 @@ export default function AdminPage() {
       
       const data = await response.json();
       setBookings(data.bookings || []);
+      setBookingMessage({type: 'success', text: `成功載入 ${data.bookings?.length || 0} 筆預約資料`});
+      
+      // 3秒後清除成功訊息
+      setTimeout(() => {
+        setBookingMessage({type: null, text: ''});
+      }, 3000);
+      
     } catch (error) {
       console.error('獲取預約列表失敗:', error);
+      setBookingMessage({type: 'error', text: '獲取預約資料失敗，請稍後再試'});
       showError('獲取預約列表失敗');
+      
+      // 5秒後清除錯誤訊息
+      setTimeout(() => {
+        setBookingMessage({type: null, text: ''});
+      }, 5000);
+    } finally {
+      setLoadingBookings(false);
     }
   };
 
   // 獲取月度統計
   const fetchMonthlyStats = async (year: number, month: number) => {
+    setBookingMessage({type: null, text: `正在載入${year}年${month}月統計資料...`});
+    
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000'}/admin/bookings/monthly?year=${year}&month=${month}`, {
         headers: {
@@ -275,14 +307,68 @@ export default function AdminPage() {
       
       const data = await response.json();
       setMonthlyStats(data.daily_stats || {});
+      
+      // 從月度統計中提取所有預約詳情
+      const allMonthlyBookings: BookingDetail[] = [];
+      Object.values(data.daily_stats || {}).forEach((dayStats: any) => {
+        if (dayStats.bookings && Array.isArray(dayStats.bookings)) {
+          dayStats.bookings.forEach((booking: any) => {
+            // 將時間格式轉換為完整的ISO字符串
+            const dateStr = dayStats.date;
+            const timeSlot = booking.time_slot; // HH:MM格式
+            const startTimeISO = `${dateStr}T${timeSlot}:00+08:00`;
+            
+            // 正確計算結束時間 (加4小時)
+            const [hours, minutes] = timeSlot.split(':').map(Number);
+            const startDate = new Date(`${dateStr}T${timeSlot}:00+08:00`);
+            const endDate = new Date(startDate.getTime() + 4 * 60 * 60 * 1000); // 加4小時
+            const endTimeISO = endDate.toISOString();
+            
+            allMonthlyBookings.push({
+              id: booking.id,
+              user_name: booking.user_name,
+              user_email: booking.user_email,
+              machine_name: booking.machine_name,
+              machine_description: '',
+              machine_id: booking.machine_id,
+              start_time: startTimeISO,
+              end_time: endTimeISO,
+              status: booking.status,
+              created_at: ''
+            });
+          });
+        }
+      });
+      
+      // 更新預約狀態
+      setBookings(allMonthlyBookings);
+      
+      const statsCount = Object.keys(data.daily_stats || {}).length;
+      const bookingCount = allMonthlyBookings.length;
+      setBookingMessage({type: 'success', text: `成功載入${year}年${month}月統計資料 (${statsCount} 天，${bookingCount} 筆預約)`});
+      
+      // 3秒後清除成功訊息
+      setTimeout(() => {
+        setBookingMessage({type: null, text: ''});
+      }, 3000);
+      
     } catch (error) {
       console.error('獲取月度統計失敗:', error);
+      setBookingMessage({type: 'error', text: `載入${year}年${month}月統計資料失敗`});
       showError('獲取月度統計失敗');
+      
+      // 5秒後清除錯誤訊息
+      setTimeout(() => {
+        setBookingMessage({type: null, text: ''});
+      }, 5000);
     }
   };
 
   // 獲取所有通知
   const fetchNotifications = async () => {
+    if (loadingNotifications) return; // 防止重複請求
+    
+    setLoadingNotifications(true);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000'}/admin/notifications`, {
         headers: {
@@ -299,6 +385,8 @@ export default function AdminPage() {
     } catch (error) {
       console.error('獲取通知列表失敗:', error);
       showError('獲取通知列表失敗');
+    } finally {
+      setLoadingNotifications(false);
     }
   };
 
@@ -839,8 +927,7 @@ export default function AdminPage() {
       
       showSuccess(`預約已成功刪除！\n${result.details.machine_name} - ${result.details.user_name}`);
       
-      // 重新獲取資料
-      await fetchBookings();
+      // 重新獲取月度統計資料
       await fetchMonthlyStats(currentYear, currentMonth);
       
       // 如果當前有選中日期和打開的詳情弹窗，立即更新該日期的預約詳情
@@ -961,69 +1048,80 @@ export default function AdminPage() {
 
                 {/* 用戶列表 */}
                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            用戶信息
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            當前角色
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            操作
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredUsers.map((user) => (
-                          <tr key={user.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                <div className="text-sm text-gray-500">{user.email}</div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                user.role === 'admin' 
-                                  ? 'bg-red-100 text-red-800'
-                                  : user.role === 'manager'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : 'bg-green-100 text-green-800'
-                              }`}>
-                                {user.role === 'admin' ? '管理員' : user.role === 'manager' ? '經理' : '使用者'}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {canModifyRole(user.role) ? (
-                                <select
-                            value={user.role}
-                                  onChange={(e) => handleRoleChange(user.email, e.target.value)}
-                                  className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-primary focus:border-transparent"
-                                >
-                                  {getAvailableRoles(user.role).map(role => (
-                                    <option key={role} value={role}>
-                                      {role === 'admin' ? '管理員' : role === 'manager' ? '經理' : '使用者'}
-                                    </option>
-                                  ))}
-                                </select>
-                              ) : (
-                                <span className="text-sm text-gray-500">無權限修改</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                  {filteredUsers.length === 0 && (
-                    <div className="text-center py-12">
-                      <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">沒有找到符合條件的用戶</p>
+                  {loadingUsers ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center">
+                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em]" />
+                        <p className="mt-4 text-text-secondary">載入用戶資料中...</p>
+                      </div>
                     </div>
+                  ) : (
+                    <>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                用戶信息
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                當前角色
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                操作
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {filteredUsers.map((user) => (
+                              <tr key={user.id} className="hover:bg-gray-50">
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <div>
+                                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                                    <div className="text-sm text-gray-500">{user.email}</div>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    user.role === 'admin' 
+                                      ? 'bg-red-100 text-red-800'
+                                      : user.role === 'manager'
+                                      ? 'bg-blue-100 text-blue-800'
+                                      : 'bg-green-100 text-green-800'
+                                  }`}>
+                                    {user.role === 'admin' ? '管理員' : user.role === 'manager' ? '經理' : '使用者'}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  {canModifyRole(user.role) ? (
+                                    <select
+                                      value={user.role}
+                                      onChange={(e) => handleRoleChange(user.email, e.target.value)}
+                                      className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    >
+                                      {getAvailableRoles(user.role).map(role => (
+                                        <option key={role} value={role}>
+                                          {role === 'admin' ? '管理員' : role === 'manager' ? '經理' : '使用者'}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  ) : (
+                                    <span className="text-sm text-gray-500">無權限修改</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      {filteredUsers.length === 0 && !loadingUsers && (
+                        <div className="text-center py-12">
+                          <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-500">沒有找到符合條件的用戶</p>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -1032,6 +1130,41 @@ export default function AdminPage() {
             {/* 預約管理標籤 */}
             {activeTab === 'bookings' && (
               <div className="space-y-6">
+                {/* 載入/狀態提示 */}
+                {bookingMessage.text && (
+                  <div className={`p-4 rounded-lg border relative ${
+                    bookingMessage.type === 'success' 
+                      ? 'bg-green-50 border-green-200 text-green-800' 
+                      : bookingMessage.type === 'error'
+                      ? 'bg-red-50 border-red-200 text-red-800'
+                      : 'bg-blue-50 border-blue-200 text-blue-800'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        {loadingBookings && (
+                          <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent mr-3" />
+                        )}
+                        <span className="text-sm font-medium">{bookingMessage.text}</span>
+                        {bookingMessage.type === 'success' && (
+                          <span className="ml-2 text-green-600">✓</span>
+                        )}
+                        {bookingMessage.type === 'error' && (
+                          <span className="ml-2 text-red-600">✗</span>
+                        )}
+                      </div>
+                      {/* 手動關閉按鈕 */}
+                      {!loadingBookings && (
+                        <button 
+                          onClick={() => setBookingMessage({type: null, text: ''})}
+                          className="ml-4 text-gray-400 hover:text-gray-600"
+                        >
+                          <XMarkIcon className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* 頁面標題和搜尋過濾 */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -1041,11 +1174,12 @@ export default function AdminPage() {
                     </p>
                   </div>
                   
-                  {/* 月份選擇器 */}
+                  {/* 月份選擇器和重新載入按鈕 */}
                   <div className="mt-4 sm:mt-0 flex items-center space-x-2">
                     <button 
                       onClick={() => changeMonth(-1)}
                       className="p-2 hover:bg-gray-100 rounded-md"
+                      disabled={loadingBookings}
                     >
                       <ChevronLeftIcon className="h-5 w-5" />
                     </button>
@@ -1053,6 +1187,7 @@ export default function AdminPage() {
                     <button
                       onClick={openYearMonthPicker}
                       className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium"
+                      disabled={loadingBookings}
                     >
                       {currentYear}年{currentMonth}月
                     </button>
@@ -1060,8 +1195,25 @@ export default function AdminPage() {
                     <button 
                       onClick={() => changeMonth(1)}
                       className="p-2 hover:bg-gray-100 rounded-md"
+                      disabled={loadingBookings}
                     >
                       <ChevronRightIcon className="h-5 w-5" />
+                    </button>
+                    
+                    {/* 重新載入按鈕 */}
+                    <button 
+                      onClick={() => {
+                        fetchMonthlyStats(currentYear, currentMonth);
+                      }}
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
+                      disabled={loadingBookings}
+                    >
+                      {loadingBookings ? (
+                        <div className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
+                      ) : (
+                        <span>🔄</span>
+                      )}
+                      <span>{loadingBookings ? '載入中' : '重新載入'}</span>
                     </button>
                   </div>
                 </div>
