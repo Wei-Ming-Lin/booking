@@ -3963,22 +3963,25 @@ def check_rolling_window_limit(user_email, machine_id, target_time_slot, cur):
         
         logger.info(f"Target time slot (normalized): {target_time_slot}")
         
-        # 獲取用戶所有的預約時段（用於檢查滾動窗口）
+        # 從當前時間開始，只獲取用戶未來的預約時段（用於檢查滾動窗口）
+        current_taipei_time = get_taipei_now().replace(tzinfo=None)
+        
         cur.execute("""
             SELECT time_slot
             FROM bookings
             WHERE user_email = %s 
             AND machine_id = %s 
             AND status = 'active'
+            AND time_slot >= %s
             ORDER BY time_slot
-        """, (user_email, machine_id))
+        """, (user_email, machine_id, current_taipei_time))
         
-        all_bookings = cur.fetchall()
-        all_booking_slots = [booking['time_slot'] for booking in all_bookings]
+        future_bookings = cur.fetchall()
+        future_booking_slots = [booking['time_slot'] for booking in future_bookings]
         
         # 確保所有預約時段都是無時區的datetime對象
         normalized_booking_slots = []
-        for slot in all_booking_slots:
+        for slot in future_booking_slots:
             if slot.tzinfo:
                 normalized_slot = slot.astimezone(TAIPEI_TZ).replace(tzinfo=None)
             else:
@@ -3991,9 +3994,10 @@ def check_rolling_window_limit(user_email, machine_id, target_time_slot, cur):
         
         logger.info(f"Rolling window check for user {user_email}, machine {machine_id}")
         logger.info(f"Target slot: {target_time_slot}")
-        logger.info(f"Existing bookings: {len(normalized_booking_slots)}")
-        logger.info(f"All bookings (with new): {len(all_booking_slots_with_new)}")
+        logger.info(f"Existing future bookings: {len(normalized_booking_slots)}")
+        logger.info(f"All future bookings (with new): {len(all_booking_slots_with_new)}")
         logger.info(f"Window size: {window_size}, Max bookings: {max_bookings}")
+        logger.info(f"Current time: {current_taipei_time}")
         
         # 檢查所有可能的滾動窗口
         # 對於任意 window_size 個連續時段，預約數不能超過 max_bookings
@@ -4072,7 +4076,7 @@ def check_rolling_window_limit(user_email, machine_id, target_time_slot, cur):
                 'max_bookings': max_bookings,
                 'total_bookings_after': len(all_booking_slots_with_new),
                 'windows_checked': len(all_booking_slots_with_new) * 2 if all_booking_slots_with_new else 0,
-                'current_bookings': len(all_booking_slots)
+                'current_future_bookings': len(normalized_booking_slots)
             }
         }
         
@@ -4152,7 +4156,7 @@ def get_user_rolling_window_status(user_email, machine_id, cur):
                 'error': '限制規則解析錯誤'
             }
         
-        # 計算當前滾動窗口（以現在時間為準）
+        # 計算當前滾動窗口（從現在時間開始往未來看）
         current_time_slot = current_time.replace(minute=0, second=0, microsecond=0)
         
         # 調整到最近的有效時段
@@ -4169,11 +4173,11 @@ def get_user_rolling_window_status(user_email, machine_id, cur):
             else:
                 current_time_slot = current_time_slot.replace(hour=next_hour)
         
-        # 計算窗口範圍
-        window_start = current_time_slot - timedelta(hours=(window_size - 1) * 4)
-        window_end = current_time_slot
+        # 計算窗口範圍（從當前時間開始，往未來看 window_size 個時段）
+        window_start = current_time_slot
+        window_end = current_time_slot + timedelta(hours=(window_size - 1) * 4)
         
-        # 查詢窗口內的預約數量
+        # 查詢窗口內的預約數量（只計算未來的預約）
         cur.execute("""
             SELECT COUNT(*) as booking_count
             FROM bookings

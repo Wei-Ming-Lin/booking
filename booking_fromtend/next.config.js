@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['lh3.googleusercontent.com'], // 允許 Google 用戶頭像
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
-  // 移除靜態生成問題的設置
-  experimental: {
-    appDir: true,
-  },
-  // 強制動態渲染，避免靜態生成問題
-  dynamic: 'force-dynamic',
+  // Next.js 14 已經默認支持 app 目錄，不需要實驗性配置
+  // 移除過時的實驗性配置
 };
 
 module.exports = nextConfig; 

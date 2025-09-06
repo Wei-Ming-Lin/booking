@@ -195,18 +195,18 @@ export default function TimeSlotSelector({
       <div className="min-w-[800px]">
         {/* 標題列 */}
         <div className="grid grid-cols-8 gap-2 mb-4">
-          <div className="font-medium text-gray-500">時段</div>
+          <div className="font-medium text-gray-500 dark:text-dark-text-secondary">時段</div>
           {weekDates.map((date) => {
             const isSelected = isSameDay(date, selectedDate);
             return (
               <div
                 key={date.toISOString()}
                 className={`text-center transition-all duration-300 ${
-                  isSelected ? 'text-primary font-bold scale-105' : 'text-gray-900'
+                  isSelected ? 'text-primary dark:text-dark-accent font-bold scale-105' : 'text-gray-900 dark:text-dark-text-primary'
                 }`}
               >
                 <div className="text-sm">{format(date, 'M/d')}</div>
-                <div className="text-xs text-gray-500">{format(date, 'EEEE', { locale: zhTW })}</div>
+                <div className="text-xs text-gray-500 dark:text-dark-text-secondary">{format(date, 'EEEE', { locale: zhTW })}</div>
               </div>
             );
           })}
@@ -215,7 +215,7 @@ export default function TimeSlotSelector({
         {/* 時段格線 */}
         {timeSlots.map((timeSlot) => (
           <div key={timeSlot.value} className="grid grid-cols-8 gap-2 mb-2">
-            <div className="text-sm text-gray-500 py-2">
+            <div className="text-sm text-gray-500 dark:text-dark-text-secondary py-2">
               {timeSlot.time}
             </div>
             {weekDates.map((date) => {
@@ -235,22 +235,22 @@ export default function TimeSlotSelector({
                     ${
                       disabled
                         ? status === '冷卻'
-                          ? 'bg-orange-100 text-orange-600 cursor-not-allowed hover:shadow-none border border-orange-300'
+                          ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 cursor-not-allowed hover:shadow-none border-2 border-orange-300 dark:border-orange-500'
                           : isOwnBooking
-                          ? 'bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 border border-blue-300'
+                          ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-800/40 border-2 border-blue-300 dark:border-blue-400'
                           : isOthersBooking
-                          ? 'bg-red-50 text-red-600 cursor-not-allowed hover:shadow-none border border-red-200'
-                          : 'bg-gray-100 text-gray-400 cursor-not-allowed hover:shadow-none'
+                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 cursor-not-allowed hover:shadow-none border-2 border-red-200 dark:border-red-400'
+                          : 'bg-gray-100 dark:bg-gray-800/50 text-gray-400 dark:text-gray-500 cursor-not-allowed hover:shadow-none border-2 border-gray-200 dark:border-gray-600'
                         : isSelected
-                        ? 'bg-primary text-white ring-2 ring-primary ring-offset-2 scale-105 hover:bg-primary-dark'
-                        : 'bg-white border border-gray-200 hover:border-primary hover:text-primary hover:shadow-md hover:-translate-y-0.5'
+                        ? 'bg-primary dark:bg-dark-accent text-white border-2 border-primary dark:border-dark-accent ring-2 ring-primary/30 dark:ring-dark-accent/50 ring-offset-1 dark:ring-offset-dark-bg-secondary scale-105 hover:bg-primary-dark dark:hover:bg-dark-accent-dark shadow-lg dark:shadow-dark-accent/25'
+                        : 'bg-white dark:bg-dark-bg-tertiary border-2 border-gray-200 dark:border-dark-accent/30 hover:border-primary dark:hover:border-dark-accent hover:text-primary dark:hover:text-dark-accent hover:shadow-md dark:hover:shadow-dark-accent/20 hover:-translate-y-0.5 text-gray-700 dark:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary'
                     }
                   `}
                   title={isOthersBooking ? `已被 ${status} 預約` : status}
                 >
                   <span className="relative z-10 leading-tight">{status}</span>
                   {status === '冷卻' && (
-                    <div className="absolute inset-0 bg-orange-200 opacity-30 rounded-lg"></div>
+                    <div className="absolute inset-0 bg-orange-200 dark:bg-orange-600/20 opacity-30 rounded-lg"></div>
                   )}
                 </button>
               );

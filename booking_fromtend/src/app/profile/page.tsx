@@ -270,51 +270,51 @@ export default function ProfilePage() {
     const statusConfig = getStatusConfig(selectedBooking);
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+      <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 max-w-md w-full mx-4 shadow-xl dark:shadow-dark-bg-primary/20 border border-gray-200 dark:border-dark-border">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-text-primary">
               {canCancel ? '確認取消預約' : '預約詳情'}
             </h3>
             <button
               onClick={() => setShowCancelModal(false)}
-              className="text-gray-500 hover:text-gray-700 transition-colors"
+              className="text-gray-500 dark:text-dark-text-secondary hover:text-gray-700 dark:hover:text-dark-text-primary transition-colors"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
           
           {!canCancel && selectedBooking.status === 'active' && (
-            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md flex items-start">
-              <ExclamationTriangleIcon className="h-5 w-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
-              <p className="text-sm text-yellow-800">
+            <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-md flex items-start">
+              <ExclamationTriangleIcon className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5 mr-2 flex-shrink-0" />
+              <p className="text-sm text-yellow-800 dark:text-yellow-300">
                 此預約已無法取消（預約時間已開始或已過期）
               </p>
             </div>
           )}
           
-          <div className="bg-gray-50 p-4 rounded-md mb-4 space-y-3">
+          <div className="bg-gray-50 dark:bg-dark-bg-primary p-4 rounded-md mb-4 space-y-3 border border-gray-200 dark:border-dark-border">
             <div>
-              <p className="font-medium text-gray-900">{selectedBooking.machine_name}</p>
-              <p className="text-sm text-gray-600">{selectedBooking.machine_description}</p>
+              <p className="font-medium text-gray-900 dark:text-dark-text-primary">{selectedBooking.machine_name}</p>
+              <p className="text-sm text-gray-600 dark:text-dark-text-secondary">{selectedBooking.machine_description}</p>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-dark-text-secondary">
                 <CalendarDaysIcon className="h-4 w-4 mr-1" />
                 {format(parseISO(selectedBooking.start_time), 'yyyy年M月d日', { locale: zhTW })}
               </div>
             </div>
             
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-dark-text-secondary">
               <ClockIcon className="h-4 w-4 mr-1" />
               {formatTaipeiTime(parseISO(selectedBooking.start_time), 'HH:mm')} - 
               {formatTaipeiTime(parseISO(selectedBooking.end_time), 'HH:mm')}
-              <span className="ml-2 text-gray-500">(4小時)</span>
+              <span className="ml-2 text-gray-500 dark:text-dark-text-secondary">(4小時)</span>
             </div>
             
             <div className="flex items-center">
-              <statusConfig.icon className="h-4 w-4 mr-1 text-gray-600" />
+              <statusConfig.icon className="h-4 w-4 mr-1 text-gray-600 dark:text-dark-text-secondary" />
               <span className={`text-sm ${statusConfig.textColor}`}>
                 {statusConfig.text}
               </span>
@@ -324,14 +324,14 @@ export default function ProfilePage() {
           <div className="flex justify-end space-x-3">
             <button
               onClick={() => setShowCancelModal(false)}
-              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+              className="px-4 py-2 text-gray-600 dark:text-dark-text-secondary hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md transition-colors"
             >
               {canCancel ? '返回' : '關閉'}
             </button>
             {canCancel && selectedBooking.status === 'active' && (
               <button
                 onClick={() => handleCancelBooking(selectedBooking)}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                className="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-800 transition-colors"
               >
                 確認取消
               </button>
@@ -423,10 +423,10 @@ export default function ProfilePage() {
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="min-h-screen pt-20 pb-10 bg-muted flex items-center justify-center">
+      <div className="min-h-screen pt-20 pb-10 bg-muted dark:bg-dark-bg-primary flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">載入中...</p>
+          <div className="w-16 h-16 border-4 border-primary dark:border-dark-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-dark-text-secondary">載入中...</p>
         </div>
       </div>
     );
@@ -439,14 +439,14 @@ export default function ProfilePage() {
   const sortedDates = Object.keys(groupedBookings).sort((a, b) => a.localeCompare(b));
 
   return (
-    <div className="min-h-screen pt-20 pb-10 bg-muted">
+    <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 p-6 mb-6 border dark:border-dark-border">
           {/* 頁面標題與月份導航 */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">我的預約記錄</h1>
-              <p className="text-gray-600">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">我的預約記錄</h1>
+              <p className="text-gray-600 dark:text-dark-text-secondary">
                 {currentYear}年{currentMonth}月的預約記錄（共 {getFilteredBookings().length} 筆）
               </p>
             </div>
@@ -455,21 +455,21 @@ export default function ProfilePage() {
             <div className="mt-4 sm:mt-0 flex items-center space-x-2">
               <button 
                 onClick={() => changeMonth(-1)}
-                className="p-2 hover:bg-gray-100 rounded-md"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary transition-all duration-200"
               >
                 <ChevronLeftIcon className="h-5 w-5" />
               </button>
               
               <button
                 onClick={openYearMonthPicker}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium"
+                className="px-4 py-2 bg-white dark:bg-dark-bg-primary border border-gray-300 dark:border-dark-border rounded-md hover:bg-gray-50 dark:hover:bg-dark-bg-secondary text-sm font-medium text-gray-900 dark:text-dark-text-primary transition-all duration-200"
               >
                 {currentYear}年{currentMonth}月
               </button>
               
               <button 
                 onClick={() => changeMonth(1)}
-                className="p-2 hover:bg-gray-100 rounded-md"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary transition-all duration-200"
               >
                 <ChevronRightIcon className="h-5 w-5" />
               </button>
@@ -477,48 +477,48 @@ export default function ProfilePage() {
           </div>
 
           {/* 搜尋和篩選區域 */}
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <div className="bg-gray-50 dark:bg-dark-bg-primary p-4 rounded-lg mb-6 border border-gray-200 dark:border-dark-border">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="搜尋機器名稱或描述..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary placeholder-gray-500 dark:placeholder-gray-400"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 dark:text-gray-300 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 </div>
               </div>
               <div className="sm:w-48">
-                <div className="flex rounded-md border border-gray-300 overflow-hidden">
+                <div className="flex rounded-md border border-gray-300 dark:border-dark-border overflow-hidden">
                   <button
                     onClick={() => setFilter('all')}
                     className={`px-3 py-2 text-sm font-medium transition-colors ${
                       filter === 'all'
-                        ? 'bg-primary text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                        ? 'bg-primary dark:bg-dark-accent text-white'
+                        : 'bg-white dark:bg-dark-bg-primary text-gray-700 dark:text-dark-text-secondary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary'
                     }`}
                   >
                     全部
                   </button>
                   <button
                     onClick={() => setFilter('active')}
-                    className={`px-3 py-2 text-sm font-medium transition-colors border-l border-gray-300 ${
+                    className={`px-3 py-2 text-sm font-medium transition-colors border-l border-gray-300 dark:border-dark-border ${
                       filter === 'active'
-                        ? 'bg-primary text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                        ? 'bg-primary dark:bg-dark-accent text-white'
+                        : 'bg-white dark:bg-dark-bg-primary text-gray-700 dark:text-dark-text-secondary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary'
                     }`}
                   >
                     有效
                   </button>
                   <button
                     onClick={() => setFilter('cancelled')}
-                    className={`px-3 py-2 text-sm font-medium transition-colors border-l border-gray-300 ${
+                    className={`px-3 py-2 text-sm font-medium transition-colors border-l border-gray-300 dark:border-dark-border ${
                       filter === 'cancelled'
-                        ? 'bg-primary text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                        ? 'bg-primary dark:bg-dark-accent text-white'
+                        : 'bg-white dark:bg-dark-bg-primary text-gray-700 dark:text-dark-text-secondary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary'
                     }`}
                   >
                     已取消
@@ -529,11 +529,11 @@ export default function ProfilePage() {
           </div>
 
           {/* 月曆視圖 */}
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-white dark:bg-dark-bg-secondary border border-gray-200 dark:border-dark-border rounded-lg overflow-hidden">
             {/* 星期標題 */}
-            <div className="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+            <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b border-gray-200 dark:border-dark-border">
               {['日', '一', '二', '三', '四', '五', '六'].map((day) => (
-                <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700">
+                <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700 dark:text-dark-text-primary">
                   {day}
                 </div>
               ))}
@@ -551,11 +551,11 @@ export default function ProfilePage() {
                   });
                   
                   return (
-                    <div key={index} className="min-h-[120px] border-r border-b border-gray-200 p-2 hover:bg-gray-50 cursor-pointer" onClick={() => showDayDetails(day)}>
+                    <div key={index} className="min-h-[120px] border-r border-b border-gray-200 dark:border-dark-border p-2 hover:bg-gray-50 dark:hover:bg-dark-bg-primary/50 cursor-pointer bg-white dark:bg-dark-bg-secondary" onClick={() => showDayDetails(day)}>
                       <div className="flex justify-between items-start mb-2">
-                        <span className="text-sm font-medium text-gray-900">{day}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{day}</span>
                         {dayBookings.length > 0 && (
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                          <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-200 dark:border-blue-700">
                             {dayBookings.length}
                           </span>
                         )}
@@ -571,8 +571,8 @@ export default function ProfilePage() {
                           });
                           
                           const statusConfig = getStatusConfig(booking);
-                          const bgColor = booking.status === 'active' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200';
-                          const textColor = booking.status === 'active' ? 'text-green-700' : 'text-gray-500';
+                          const bgColor = booking.status === 'active' ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700' : 'bg-gray-50 dark:bg-dark-bg-primary border-gray-200 dark:border-dark-border';
+                          const textColor = booking.status === 'active' ? 'text-green-700 dark:text-green-300' : 'text-gray-500 dark:text-dark-text-secondary';
                           
                           return (
                             <div key={bookingIndex} className={`text-xs ${bgColor} border rounded p-1`}>
@@ -585,7 +585,7 @@ export default function ProfilePage() {
                         
                         {/* 如果有更多預約，顯示省略號 */}
                         {dayBookings.length > 4 && (
-                          <div className="text-xs text-gray-500 text-center">
+                          <div className="text-xs text-gray-500 dark:text-dark-text-secondary text-center">
                             +{dayBookings.length - 4} 更多
                           </div>
                         )}
@@ -595,7 +595,7 @@ export default function ProfilePage() {
                 } else {
                   // 空白日期
                   return (
-                    <div key={index} className="min-h-[120px] border-r border-b border-gray-200 bg-gray-50">
+                    <div key={index} className="min-h-[120px] border-r border-b border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg-primary/50">
                     </div>
                   );
                 }
@@ -605,17 +605,17 @@ export default function ProfilePage() {
 
           {/* 年月選擇器彈窗 */}
           {showYearMonthPicker && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 w-80">
-                <h3 className="text-lg font-medium mb-4">選擇年月</h3>
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 w-80 border border-gray-200 dark:border-dark-border shadow-lg dark:shadow-dark-bg-primary/20">
+                <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-dark-text-primary">選擇年月</h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">年份</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-primary mb-1">年份</label>
                     <select 
                       value={tempYear} 
                       onChange={(e) => setTempYear(parseInt(e.target.value))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      className="w-full border border-gray-300 dark:border-dark-border rounded-md px-3 py-2 bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent"
                     >
                       {generateYearOptions().map(year => (
                         <option key={year} value={year}>{year}年</option>
@@ -624,11 +624,11 @@ export default function ProfilePage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">月份</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-primary mb-1">月份</label>
                     <select 
                       value={tempMonth} 
                       onChange={(e) => setTempMonth(parseInt(e.target.value))}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
+                      className="w-full border border-gray-300 dark:border-dark-border rounded-md px-3 py-2 bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent"
                     >
                       {[1,2,3,4,5,6,7,8,9,10,11,12].map(month => (
                         <option key={month} value={month}>{month}月</option>
@@ -640,13 +640,13 @@ export default function ProfilePage() {
                 <div className="flex space-x-3 mt-6">
                   <button 
                     onClick={() => setShowYearMonthPicker(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-dark-border rounded-md hover:bg-gray-50 dark:hover:bg-dark-bg-primary text-gray-700 dark:text-dark-text-secondary bg-white dark:bg-dark-bg-secondary"
                   >
                     取消
                   </button>
                   <button 
                     onClick={confirmYearMonth}
-                    className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                    className="flex-1 px-4 py-2 bg-primary dark:bg-dark-accent text-white rounded-md hover:bg-primary/90 dark:hover:bg-dark-accent/90"
                   >
                     確認
                   </button>
@@ -657,33 +657,33 @@ export default function ProfilePage() {
 
           {/* 日期詳細預約模態框 */}
           {showDateDetails && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden">
+            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg dark:shadow-dark-bg-primary/20 w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-200 dark:border-dark-border">
                 {/* 模態框標題 */}
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <div className="px-6 py-4 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">
                       {selectedDate && format(parseISO(selectedDate + 'T00:00:00'), 'yyyy年M月d日 (EEEE)', { locale: zhTW })} 我的預約
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-dark-text-secondary mt-1">
                       共 {selectedDateBookings.length} 筆預約
                     </p>
                   </div>
                   <button
                     onClick={() => setShowDateDetails(false)}
-                    className="p-2 hover:bg-gray-100 rounded-md"
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md text-gray-500 dark:text-dark-text-secondary"
                   >
                     <XMarkIcon className="h-5 w-5" />
                   </button>
                 </div>
                 
                 {/* 預約列表 */}
-                <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
+                <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)] bg-white dark:bg-dark-bg-secondary">
                   {selectedDateBookings.length === 0 ? (
                     <div className="text-center py-12">
-                      <CalendarDaysIcon className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                      <p className="text-lg text-gray-500">該日無預約</p>
-                      <p className="text-sm text-gray-400 mt-2">選擇的日期沒有任何預約記錄</p>
+                      <CalendarDaysIcon className="h-12 w-12 mx-auto mb-4 text-gray-400 dark:text-dark-text-secondary" />
+                      <p className="text-lg text-gray-500 dark:text-dark-text-secondary">該日無預約</p>
+                      <p className="text-sm text-gray-400 dark:text-dark-text-secondary mt-2">選擇的日期沒有任何預約記錄</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -693,7 +693,7 @@ export default function ProfilePage() {
                         const canCancel = canCancelBooking(booking.start_time);
                         
                         return (
-                          <div key={booking.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <div key={booking.id} className="bg-gray-50 dark:bg-dark-bg-primary rounded-lg p-4 border border-gray-200 dark:border-dark-border">
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
@@ -701,41 +701,41 @@ export default function ProfilePage() {
                                     <IconComponent className="h-3 w-3 mr-1" />
                                     {statusConfig.text}
                                   </span>
-                                  <span className="text-sm text-gray-500">
+                                  <span className="text-sm text-gray-500 dark:text-dark-text-secondary">
                                     預約編號: #{booking.id}
                                   </span>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-900 mb-1">時段資訊</h4>
-                                    <p className="text-sm text-gray-600">
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">時段資訊</h4>
+                                    <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                       {formatTaipeiTime(parseISO(booking.start_time), 'HH:mm')} - 
                                       {formatTaipeiTime(parseISO(booking.end_time), 'HH:mm')}
-                                      <span className="text-gray-400 ml-2">(4小時)</span>
+                                      <span className="text-gray-400 dark:text-dark-text-secondary ml-2">(4小時)</span>
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-900 mb-1">機器資訊</h4>
-                                    <p className="text-sm text-gray-600">
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">機器資訊</h4>
+                                    <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                       {booking.machine_name}
-                                      <span className="text-gray-400 ml-2">#{booking.machine_id}</span>
+                                      <span className="text-gray-400 dark:text-dark-text-secondary ml-2">#{booking.machine_id}</span>
                                     </p>
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className="text-xs text-gray-500 dark:text-dark-text-secondary mt-1">
                                       {booking.machine_description}
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-900 mb-1">預約時間</h4>
-                                    <p className="text-sm text-gray-600">
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">預約時間</h4>
+                                    <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                       {formatTaipeiTime(parseISO(booking.created_at), 'yyyy/MM/dd HH:mm')}
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-900 mb-1">操作</h4>
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">操作</h4>
                                     {booking.status === 'active' && canCancel ? (
                                       <button
                                         onClick={() => {
@@ -743,7 +743,7 @@ export default function ProfilePage() {
                                           setShowCancelModal(true);
                                           setShowDateDetails(false);
                                         }}
-                                        className="text-sm bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200"
+                                        className="text-sm bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-3 py-1 rounded hover:bg-red-200 dark:hover:bg-red-900/50 border border-red-200 dark:border-red-700"
                                       >
                                         取消預約
                                       </button>

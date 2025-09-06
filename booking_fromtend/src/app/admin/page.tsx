@@ -524,13 +524,13 @@ export default function AdminPage() {
   const getLevelStyle = (level: string) => {
     switch (level) {
       case '高':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700';
       case '中':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700';
       case '低':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 dark:bg-gray-800/50 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600';
     }
   };
 
@@ -944,10 +944,10 @@ export default function AdminPage() {
 
   if (status === 'loading' || isLoading) {
   return (
-      <div className="min-h-screen pt-20 pb-10 bg-muted flex items-center justify-center">
+      <div className="min-h-screen pt-10 pb-10 bg-muted dark:bg-dark-bg-primary flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">載入中...</p>
+          <div className="w-16 h-16 border-4 border-primary dark:border-dark-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-dark-text-secondary">載入中...</p>
         </div>
       </div>
     );
@@ -958,24 +958,24 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-10 bg-muted">
+    <div className="min-h-screen pt-10 pb-10 bg-muted dark:bg-dark-bg-primary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm mb-6">
+        <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 mb-6 border dark:border-dark-border">
           {/* 頁面標題 */}
-          <div className="p-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">管理介面</h1>
-            <p className="text-gray-600 mt-1">當前角色：{currentUserRole === 'admin' ? '管理員' : '經理'}</p>
+          <div className="p-6 border-b border-gray-200 dark:border-dark-border">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-dark-text-primary">管理介面</h1>
+            <p className="text-gray-600 dark:text-dark-text-secondary mt-1">當前角色：{currentUserRole === 'admin' ? '管理員' : '經理'}</p>
           </div>
 
           {/* 導航標籤 */}
           <div className="px-6">
-            <div className="flex space-x-1 border-b border-gray-200">
+            <div className="flex space-x-1 border-b-2 border-gray-200 dark:border-dark-border">
               <button
                 onClick={() => setActiveTab('users')}
-                className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === 'users'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'border-b-2 border-primary dark:border-dark-accent text-primary dark:text-dark-accent bg-primary/5 dark:bg-dark-accent/10'
+                    : 'text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-primary'
                 }`}
               >
                 <UserIcon className="h-5 w-5 mr-2" />
@@ -983,10 +983,10 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => setActiveTab('bookings')}
-                className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === 'bookings'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'border-b-2 border-primary dark:border-dark-accent text-primary dark:text-dark-accent bg-primary/5 dark:bg-dark-accent/10'
+                    : 'text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-primary'
                 }`}
               >
                 <CalendarIcon className="h-5 w-5 mr-2" />
@@ -994,10 +994,10 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => setActiveTab('notifications')}
-                className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === 'notifications'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'border-b-2 border-primary dark:border-dark-accent text-primary dark:text-dark-accent bg-primary/5 dark:bg-dark-accent/10'
+                    : 'text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-primary'
                 }`}
               >
                 <BellIcon className="h-5 w-5 mr-2" />
@@ -1005,10 +1005,10 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => setActiveTab('machines')}
-                className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === 'machines'
-                    ? 'border-b-2 border-primary text-primary'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'border-b-2 border-primary dark:border-dark-accent text-primary dark:text-dark-accent bg-primary/5 dark:bg-dark-accent/10'
+                    : 'text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-primary'
                 }`}
               >
                 <EyeIcon className="h-5 w-5 mr-2" />
@@ -1025,19 +1025,19 @@ export default function AdminPage() {
                 {/* 搜尋和篩選 */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="relative flex-1">
-                    <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300" />
                     <input
                       type="text"
                       placeholder="搜尋用戶姓名或email..."
                       value={userSearchTerm}
                       onChange={(e) => setUserSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                     />
               </div>
                   <select
                     value={roleFilter}
                     onChange={(e) => setRoleFilter(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="px-4 py-2 border-2 border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary transition-all duration-200"
                   >
                     <option value="">所有角色</option>
                     <option value="user">使用者</option>
@@ -1047,47 +1047,47 @@ export default function AdminPage() {
                 </div>
 
                 {/* 用戶列表 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-dark-bg-secondary border-2 border-gray-200 dark:border-dark-border rounded-lg overflow-hidden shadow-lg">
                   {loadingUsers ? (
                     <div className="flex items-center justify-center py-12">
                       <div className="text-center">
-                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em]" />
-                        <p className="mt-4 text-text-secondary">載入用戶資料中...</p>
+                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary dark:border-dark-accent border-r-transparent align-[-0.125em]" />
+                        <p className="mt-4 text-gray-600 dark:text-dark-text-secondary">載入用戶資料中...</p>
                       </div>
                     </div>
                   ) : (
                     <>
                       <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
+                          <thead className="bg-gray-50 dark:bg-dark-bg-primary">
                             <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                                 用戶信息
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                                 當前角色
                               </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider">
                                 操作
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
+                          <tbody className="bg-white dark:bg-dark-bg-secondary divide-y divide-gray-200 dark:divide-dark-border">
                             {filteredUsers.map((user) => (
-                              <tr key={user.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap">
+                              <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-dark-bg-primary transition-all duration-200">
+                                <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-dark-border">
                                   <div>
-                                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                    <div className="text-sm text-gray-500">{user.email}</div>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{user.name}</div>
+                                    <div className="text-sm text-gray-500 dark:text-dark-text-secondary">{user.email}</div>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-dark-border">
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
                                     user.role === 'admin' 
-                                      ? 'bg-red-100 text-red-800'
+                                      ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700'
                                       : user.role === 'manager'
-                                      ? 'bg-blue-100 text-blue-800'
-                                      : 'bg-green-100 text-green-800'
+                                      ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700'
+                                      : 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700'
                                   }`}>
                                     {user.role === 'admin' ? '管理員' : user.role === 'manager' ? '經理' : '使用者'}
                                   </span>
@@ -1097,7 +1097,7 @@ export default function AdminPage() {
                                     <select
                                       value={user.role}
                                       onChange={(e) => handleRoleChange(user.email, e.target.value)}
-                                      className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                      className="text-sm border-2 border-gray-300 dark:border-dark-border rounded-md px-2 py-1 focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary transition-all duration-200"
                                     >
                                       {getAvailableRoles(user.role).map(role => (
                                         <option key={role} value={role}>
@@ -1106,7 +1106,7 @@ export default function AdminPage() {
                                       ))}
                                     </select>
                                   ) : (
-                                    <span className="text-sm text-gray-500">無權限修改</span>
+                                    <span className="text-sm text-gray-500 dark:text-dark-text-secondary">無權限修改</span>
                                   )}
                                 </td>
                               </tr>
@@ -1117,8 +1117,8 @@ export default function AdminPage() {
                       
                       {filteredUsers.length === 0 && !loadingUsers && (
                         <div className="text-center py-12">
-                          <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-500">沒有找到符合條件的用戶</p>
+                          <UserIcon className="h-12 w-12 text-gray-400 dark:text-gray-300 mx-auto mb-4" />
+                          <p className="text-gray-500 dark:text-dark-text-secondary">沒有找到符合條件的用戶</p>
                         </div>
                       )}
                     </>
@@ -1132,12 +1132,12 @@ export default function AdminPage() {
               <div className="space-y-6">
                 {/* 載入/狀態提示 */}
                 {bookingMessage.text && (
-                  <div className={`p-4 rounded-lg border relative ${
+                  <div className={`p-4 rounded-lg border-2 relative shadow-lg ${
                     bookingMessage.type === 'success' 
-                      ? 'bg-green-50 border-green-200 text-green-800' 
+                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 text-green-800 dark:text-green-300' 
                       : bookingMessage.type === 'error'
-                      ? 'bg-red-50 border-red-200 text-red-800'
-                      : 'bg-blue-50 border-blue-200 text-blue-800'
+                      ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-800 dark:text-red-300'
+                      : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-300'
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -1146,17 +1146,17 @@ export default function AdminPage() {
                         )}
                         <span className="text-sm font-medium">{bookingMessage.text}</span>
                         {bookingMessage.type === 'success' && (
-                          <span className="ml-2 text-green-600">✓</span>
+                          <span className="ml-2 text-green-600 dark:text-green-400">✓</span>
                         )}
                         {bookingMessage.type === 'error' && (
-                          <span className="ml-2 text-red-600">✗</span>
+                          <span className="ml-2 text-red-600 dark:text-red-400">✗</span>
                         )}
                       </div>
                       {/* 手動關閉按鈕 */}
                       {!loadingBookings && (
                         <button 
                           onClick={() => setBookingMessage({type: null, text: ''})}
-                          className="ml-4 text-gray-400 hover:text-gray-600"
+                          className="ml-4 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
                         >
                           <XMarkIcon className="h-4 w-4" />
                         </button>
@@ -1168,8 +1168,8 @@ export default function AdminPage() {
                 {/* 頁面標題和搜尋過濾 */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h2 className="text-lg font-medium text-gray-900">預約管理</h2>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">預約管理</h2>
+                    <p className="text-sm text-gray-600 dark:text-dark-text-secondary mt-1">
                       {currentYear}年{currentMonth}月的預約統計
                     </p>
                   </div>
@@ -1178,7 +1178,7 @@ export default function AdminPage() {
                   <div className="mt-4 sm:mt-0 flex items-center space-x-2">
                     <button 
                       onClick={() => changeMonth(-1)}
-                      className="p-2 hover:bg-gray-100 rounded-md"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md border-2 border-transparent hover:border-dark-accent/20 dark:text-dark-text-primary transition-all duration-200"
                       disabled={loadingBookings}
                     >
                       <ChevronLeftIcon className="h-5 w-5" />
@@ -1186,7 +1186,7 @@ export default function AdminPage() {
                     
                     <button
                       onClick={openYearMonthPicker}
-                      className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium"
+                      className="px-4 py-2 bg-white dark:bg-dark-bg-secondary border-2 border-gray-300 dark:border-dark-border rounded-md hover:bg-gray-50 dark:hover:bg-dark-bg-primary text-sm font-medium text-gray-900 dark:text-dark-text-primary hover:border-dark-accent/40 transition-all duration-200"
                       disabled={loadingBookings}
                     >
                       {currentYear}年{currentMonth}月
@@ -1194,7 +1194,7 @@ export default function AdminPage() {
                     
                     <button 
                       onClick={() => changeMonth(1)}
-                      className="p-2 hover:bg-gray-100 rounded-md"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md border-2 border-transparent hover:border-dark-accent/20 dark:text-dark-text-primary transition-all duration-200"
                       disabled={loadingBookings}
                     >
                       <ChevronRightIcon className="h-5 w-5" />
@@ -1205,7 +1205,7 @@ export default function AdminPage() {
                       onClick={() => {
                         fetchMonthlyStats(currentYear, currentMonth);
                       }}
-                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
+                      className="px-3 py-2 bg-blue-500 dark:bg-dark-accent text-white text-sm rounded-md hover:bg-blue-600 dark:hover:bg-dark-accent/80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1 border-2 border-transparent hover:border-blue-300 dark:hover:border-dark-accent/60 transition-all duration-200 shadow-md"
                       disabled={loadingBookings}
                     >
                       {loadingBookings ? (
@@ -1219,25 +1219,25 @@ export default function AdminPage() {
                 </div>
 
                 {/* 搜尋過濾區域 */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 dark:bg-dark-bg-secondary p-4 rounded-lg border-2 border-gray-200 dark:border-dark-border shadow-sm">
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                       <div className="relative">
                         <input
                           type="text"
                           placeholder="搜尋用戶姓名、email或機器名稱..."
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-2 border-2 border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                           value={bookingSearchTerm}
                           onChange={(e) => setBookingSearchTerm(e.target.value)}
                         />
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 dark:text-gray-300 absolute left-3 top-1/2 transform -translate-y-1/2" />
                       </div>
                     </div>
                     <div className="sm:w-48">
                       <select 
                         value={statusFilter} 
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full border-2 border-gray-300 dark:border-dark-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary transition-all duration-200"
                       >
                         <option value="">所有狀態</option>
                         <option value="active">有效預約</option>
@@ -1248,11 +1248,11 @@ export default function AdminPage() {
                 </div>
 
                 {/* 月曆視圖 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-dark-bg-secondary border-2 border-gray-200 dark:border-dark-border rounded-lg overflow-hidden shadow-lg">
                   {/* 星期標題 */}
-                  <div className="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+                  <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b-2 border-gray-200 dark:border-dark-border">
                     {['日', '一', '二', '三', '四', '五', '六'].map((day) => (
-                      <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700">
+                      <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700 dark:text-dark-text-primary border-r border-gray-200 dark:border-dark-border last:border-r-0">
                         {day}
                       </div>
                     ))}
@@ -1270,11 +1270,11 @@ export default function AdminPage() {
                         });
                         
                         return (
-                          <div key={index} className="min-h-[120px] border-r border-b border-gray-200 p-2 hover:bg-gray-50 cursor-pointer" onClick={() => showDayDetails(day)}>
+                          <div key={index} className="min-h-[120px] border-r border-b border-gray-200 dark:border-dark-border p-2 hover:bg-gray-50 dark:hover:bg-dark-bg-primary cursor-pointer transition-all duration-200 hover:border-dark-accent/30" onClick={() => showDayDetails(day)}>
                             <div className="flex justify-between items-start mb-2">
-                              <span className="text-sm font-medium text-gray-900">{day}</span>
+                              <span className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{day}</span>
                               {dayBookings.length > 0 && (
-                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-200 dark:border-blue-700">
                                   {dayBookings.length}
                                 </span>
                               )}
@@ -1289,11 +1289,15 @@ export default function AdminPage() {
                                   hour12: false
                                 });
                                 
-                                const bgColor = booking.status === 'active' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200';
-                                const textColor = booking.status === 'active' ? 'text-green-700' : 'text-gray-500';
+                                const bgColor = booking.status === 'active' 
+                                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700' 
+                                  : 'bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-600';
+                                const textColor = booking.status === 'active' 
+                                  ? 'text-green-700 dark:text-green-300' 
+                                  : 'text-gray-500 dark:text-gray-400';
                                 
                                 return (
-                                  <div key={bookingIndex} className={`text-xs ${bgColor} border rounded p-1`}>
+                                  <div key={bookingIndex} className={`text-xs ${bgColor} border rounded p-1 transition-all duration-200`}>
                                     <div className={`${textColor} truncate`} title={`${startTime} | ${booking.machine_name} | ${booking.user_name}`}>
                                       {startTime} | {booking.machine_name} | {booking.user_name}
                                     </div>
@@ -1303,7 +1307,7 @@ export default function AdminPage() {
                               
                               {/* 如果有更多預約，顯示省略號 */}
                               {dayBookings.length > 4 && (
-                                <div className="text-xs text-gray-500 text-center">
+                                <div className="text-xs text-gray-500 dark:text-gray-400 text-center bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-1 rounded">
                                   +{dayBookings.length - 4} 更多
                                 </div>
                               )}
@@ -1313,7 +1317,7 @@ export default function AdminPage() {
                       } else {
                         // 空白日期
                         return (
-                          <div key={index} className="min-h-[120px] border-r border-b border-gray-200 bg-gray-50">
+                          <div key={index} className="min-h-[120px] border-r border-b border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg-primary/50">
                           </div>
                         );
                       }
@@ -1324,16 +1328,16 @@ export default function AdminPage() {
                 {/* 年月選擇器彈窗 */}
                 {showYearMonthPicker && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-80">
-                      <h3 className="text-lg font-medium mb-4">選擇年月</h3>
+                    <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 w-80 border-2 border-gray-200 dark:border-dark-border shadow-xl">
+                      <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-dark-text-primary">選擇年月</h3>
                       
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">年份</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-1">年份</label>
                           <select 
                             value={tempYear} 
                             onChange={(e) => setTempYear(parseInt(e.target.value))}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2"
+                            className="w-full border-2 border-gray-300 dark:border-dark-border rounded-md px-3 py-2 bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent transition-all duration-200"
                           >
                             {generateYearOptions().map(year => (
                               <option key={year} value={year}>{year}年</option>
@@ -1342,11 +1346,11 @@ export default function AdminPage() {
                         </div>
                         
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">月份</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-1">月份</label>
                           <select 
                             value={tempMonth} 
                             onChange={(e) => setTempMonth(parseInt(e.target.value))}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2"
+                            className="w-full border-2 border-gray-300 dark:border-dark-border rounded-md px-3 py-2 bg-white dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary focus:ring-2 focus:ring-primary dark:focus:ring-dark-accent focus:border-transparent transition-all duration-200"
                           >
                             {[1,2,3,4,5,6,7,8,9,10,11,12].map(month => (
                               <option key={month} value={month}>{month}月</option>
@@ -1358,13 +1362,13 @@ export default function AdminPage() {
                       <div className="flex space-x-3 mt-6">
                         <button 
                           onClick={() => setShowYearMonthPicker(false)}
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                          className="flex-1 px-4 py-2 border-2 border-gray-300 dark:border-dark-border rounded-md hover:bg-gray-50 dark:hover:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary transition-all duration-200"
                         >
                           取消
                         </button>
                         <button 
                           onClick={confirmYearMonth}
-                          className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                          className="flex-1 px-4 py-2 bg-primary dark:bg-dark-accent text-white rounded-md hover:bg-primary/90 dark:hover:bg-dark-accent/80 border-2 border-transparent hover:border-primary/30 dark:hover:border-dark-accent/60 transition-all duration-200 shadow-md"
                         >
                           確認
                         </button>
@@ -1376,32 +1380,32 @@ export default function AdminPage() {
                 {/* 日期詳細預約模態框 */}
                 {showDateDetails && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden">
+                    <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border-2 border-gray-200 dark:border-dark-border">
                       {/* 模態框標題 */}
-                      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                      <div className="px-6 py-4 border-b-2 border-gray-200 dark:border-dark-border flex items-center justify-between bg-gray-50 dark:bg-dark-bg-primary">
                         <div>
-                          <h3 className="text-lg font-medium text-gray-900">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">
                             {selectedDate && format(parseISO(selectedDate + 'T00:00:00'), 'yyyy年M月d日 (EEEE)', { locale: zhTW })} 預約詳情
                           </h3>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-gray-600 dark:text-dark-text-secondary mt-1">
                             共 {selectedDateBookings.length} 筆預約
                           </p>
                         </div>
                         <button
                           onClick={() => setShowDateDetails(false)}
-                          className="p-2 hover:bg-gray-100 rounded-md"
+                          className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-secondary rounded-md text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary transition-all duration-200"
                         >
                           <XMarkIcon className="h-5 w-5" />
                         </button>
                       </div>
                       
                       {/* 預約列表 */}
-                      <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
+                      <div className="p-6 overflow-y-auto max-h-[calc(90vh-8rem)] bg-white dark:bg-dark-bg-secondary">
                         {selectedDateBookings.length === 0 ? (
                           <div className="text-center py-12">
-                            <CalendarIcon className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                            <p className="text-lg text-gray-500">該日無預約</p>
-                            <p className="text-sm text-gray-400 mt-2">選擇的日期沒有任何預約記錄</p>
+                            <CalendarIcon className="h-12 w-12 mx-auto mb-4 text-gray-400 dark:text-gray-300" />
+                            <p className="text-lg text-gray-500 dark:text-dark-text-secondary">該日無預約</p>
+                            <p className="text-sm text-gray-400 dark:text-dark-text-secondary mt-2">選擇的日期沒有任何預約記錄</p>
                           </div>
                         ) : (
                           <div className="space-y-4">
@@ -1410,50 +1414,50 @@ export default function AdminPage() {
                               const IconComponent = statusConfig.icon;
                               
                               return (
-                                <div key={booking.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <div key={booking.id} className="bg-gray-50 dark:bg-dark-bg-primary rounded-lg p-4 border-2 border-gray-200 dark:border-dark-border hover:border-dark-accent/30 transition-all duration-200 shadow-sm">
                                   <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                       <div className="flex items-center gap-3 mb-2">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig.bgColor} ${statusConfig.textColor}`}>
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.bgColor} ${statusConfig.textColor}`}>
                                           <IconComponent className="h-3 w-3 mr-1" />
                                           {statusConfig.text}
                                         </span>
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-gray-500 dark:text-dark-text-secondary">
                                           預約編號: #{booking.id}
                                         </span>
                                       </div>
                                       
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                          <h4 className="text-sm font-medium text-gray-900 mb-1">時段資訊</h4>
-                                          <p className="text-sm text-gray-600">
+                                          <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">時段資訊</h4>
+                                          <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                             {formatTaipeiTime(parseISO(booking.start_time), 'HH:mm')} - 
                                             {formatTaipeiTime(parseISO(booking.end_time), 'HH:mm')}
-                                            <span className="text-gray-400 ml-2">(4小時)</span>
+                                            <span className="text-gray-400 dark:text-dark-text-secondary ml-2">(4小時)</span>
                                           </p>
                                         </div>
                                         
                                         <div>
-                                          <h4 className="text-sm font-medium text-gray-900 mb-1">機器資訊</h4>
-                                          <p className="text-sm text-gray-600">
+                                          <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">機器資訊</h4>
+                                          <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                             {booking.machine_name}
-                                            <span className="text-gray-400 ml-2">#{booking.machine_id}</span>
+                                            <span className="text-gray-400 dark:text-dark-text-secondary ml-2">#{booking.machine_id}</span>
                                           </p>
                                         </div>
                                         
                                         <div>
-                                          <h4 className="text-sm font-medium text-gray-900 mb-1">使用者資訊</h4>
-                                          <p className="text-sm text-gray-600">
+                                          <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">使用者資訊</h4>
+                                          <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                             {booking.user_name}
                                           </p>
-                                          <p className="text-xs text-gray-500">
+                                          <p className="text-xs text-gray-500 dark:text-dark-text-secondary">
                                             {booking.user_email}
                                           </p>
                                         </div>
                                         
                                         <div>
-                                          <h4 className="text-sm font-medium text-gray-900 mb-1">預約時間</h4>
-                                          <p className="text-sm text-gray-600">
+                                          <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">預約時間</h4>
+                                          <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
                                             {formatTaipeiTime(parseISO(booking.created_at), 'yyyy/MM/dd HH:mm')}
                                           </p>
                                         </div>
@@ -1464,7 +1468,7 @@ export default function AdminPage() {
                                     <div className="flex items-start">
                                       <button
                                         onClick={() => handleDeleteBooking(booking)}
-                                        className="ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                                        className="ml-4 p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-700"
                                         title="刪除預約"
                                       >
                                         <TrashIcon className="h-5 w-5" />
@@ -1488,14 +1492,14 @@ export default function AdminPage() {
               <div className="space-y-6">
                 {/* 頁面標題和操作按鈕 */}
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900">通知管理</h3>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">通知管理</h3>
                   <button
                     onClick={() => {
                       resetNotificationForm();
                       setEditingNotification(null);
                       setShowNotificationForm(true);
                     }}
-                    className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                    className="flex items-center px-4 py-2 bg-blue-500 dark:bg-dark-accent text-white rounded-md hover:bg-blue-600 dark:hover:bg-dark-accent/80 transition-all duration-200 border-2 border-transparent hover:border-blue-300 dark:hover:border-dark-accent/60 shadow-md"
                   >
                     <PlusIcon className="h-4 w-4 mr-2" />
                     創建通知
@@ -1503,71 +1507,71 @@ export default function AdminPage() {
                 </div>
 
                 {/* 通知列表 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-dark-bg-secondary border-2 border-gray-200 dark:border-dark-border rounded-lg overflow-hidden shadow-lg">
                   {notifications.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
+                        <thead className="bg-gray-50 dark:bg-dark-bg-primary">
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                               內容
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                               等級
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                               有效時間
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                               創建者
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider">
                               操作
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-dark-bg-secondary divide-y divide-gray-200 dark:divide-dark-border">
                           {notifications.map((notification) => (
-                            <tr key={notification.id} className="hover:bg-gray-50">
-                              <td className="px-6 py-4">
-                                <div className="text-sm text-gray-900 max-w-xs whitespace-pre-line">
+                            <tr key={notification.id} className="hover:bg-gray-50 dark:hover:bg-dark-bg-primary transition-all duration-200">
+                              <td className="px-6 py-4 border-r border-gray-200 dark:border-dark-border">
+                                <div className="text-sm text-gray-900 dark:text-dark-text-primary max-w-xs whitespace-pre-line">
                                   {notification.content}
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getLevelStyle(notification.level)}`}>
+                              <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-dark-border">
+                                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getLevelStyle(notification.level)}`}>
                                   {notification.level}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-dark-text-secondary border-r border-gray-200 dark:border-dark-border">
                                 {notification.start_time && notification.end_time ? (
                                   <div>
                                     <div>{format(parseISO(notification.start_time), 'yyyy/MM/dd HH:mm', { locale: zhTW })}</div>
-                                    <div className="text-xs text-gray-400">
+                                    <div className="text-xs text-gray-400 dark:text-dark-text-secondary">
                                       至 {format(parseISO(notification.end_time), 'yyyy/MM/dd HH:mm', { locale: zhTW })}
                                     </div>
                                   </div>
                                 ) : (
-                                  <span className="text-gray-400">無限期</span>
+                                  <span className="text-gray-400 dark:text-dark-text-secondary">無限期</span>
                                 )}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap">
+                              <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-dark-border">
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900">{notification.creator_name}</div>
-                                  <div className="text-sm text-gray-500">{notification.creator_email}</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{notification.creator_name}</div>
+                                  <div className="text-sm text-gray-500 dark:text-dark-text-secondary">{notification.creator_email}</div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div className="flex space-x-2">
                                   <button
                                     onClick={() => startEditNotification(notification)}
-                                    className="text-blue-600 hover:text-blue-900"
+                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1 rounded transition-all duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                                   >
                                     <PencilIcon className="h-4 w-4" />
                                   </button>
                                   <button
                                     onClick={() => handleDeleteNotification(notification.id)}
-                                    className="text-red-600 hover:text-red-900"
+                                    className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1 rounded transition-all duration-200 hover:bg-red-50 dark:hover:bg-red-900/20"
                                   >
                                     <TrashIcon className="h-4 w-4" />
                                   </button>
@@ -1580,19 +1584,19 @@ export default function AdminPage() {
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <BellIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">尚無通知</p>
+                      <BellIcon className="h-12 w-12 text-gray-400 dark:text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-500 dark:text-dark-text-secondary">尚無通知</p>
                     </div>
                   )}
                 </div>
 
                 {/* 通知表單彈窗 */}
                 {showNotificationForm && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+                  <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-xl max-w-md w-full mx-4 border-2 border-gray-200 dark:border-dark-border">
                       {/* 彈窗標題 */}
-                      <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                      <div className="flex items-center justify-between p-6 border-b-2 border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg-primary">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-text-primary">
                           {editingNotification ? '編輯通知' : '創建通知'}
                         </h3>
                         <button
@@ -1601,7 +1605,7 @@ export default function AdminPage() {
                             setEditingNotification(null);
                             resetNotificationForm();
                           }}
-                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                          className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                         >
                           <XMarkIcon className="h-6 w-6" />
                         </button>
@@ -1612,22 +1616,22 @@ export default function AdminPage() {
                         <div className="space-y-4">
                           {/* 通知內容 */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                               通知內容 <span className="text-red-500">*</span>
-                              <span className="text-xs text-gray-500 font-normal ml-2">(支持換行顯示)</span>
+                              <span className="text-xs text-gray-500 dark:text-dark-text-secondary font-normal ml-2">(支持換行顯示)</span>
                             </label>
                             <textarea
                               value={notificationForm.content}
                               onChange={(e) => setNotificationForm({...notificationForm, content: e.target.value})}
                               rows={3}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent focus:border-transparent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                               placeholder="輸入通知內容，可以換行輸入多行說明..."
                             />
                           </div>
 
                           {/* 等級選擇 */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                               等級 <span className="text-red-500">*</span>
                             </label>
                             <div className="flex space-x-3">
@@ -1635,10 +1639,10 @@ export default function AdminPage() {
                                 <button
                                   key={level}
                                   onClick={() => setNotificationForm({...notificationForm, level})}
-                                  className={`px-3 py-2 text-sm rounded-md transition-colors ${
+                                  className={`px-3 py-2 text-sm rounded-md transition-all duration-200 border-2 ${
                                     notificationForm.level === level
-                                      ? 'bg-blue-500 text-white'
-                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                      ? 'bg-blue-500 dark:bg-dark-accent text-white border-blue-500 dark:border-dark-accent'
+                                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600'
                                   }`}
                                 >
                                   {level}
@@ -1649,34 +1653,34 @@ export default function AdminPage() {
 
                           {/* 開始時間 */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                               開始時間 (預設：當前時間)
                             </label>
                             <input
                               type="datetime-local"
                               value={notificationForm.start_time}
                               onChange={(e) => setNotificationForm({...notificationForm, start_time: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent focus:border-transparent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                             />
                           </div>
 
                           {/* 結束時間 */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                               結束時間 (預設：7天後)
                             </label>
                             <input
                               type="datetime-local"
                               value={notificationForm.end_time}
                               onChange={(e) => setNotificationForm({...notificationForm, end_time: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent focus:border-transparent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                             />
                           </div>
                         </div>
                       </div>
 
                       {/* 彈窗底部 */}
-                      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                      <div className="px-6 py-4 border-t border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg-primary">
                         <div className="flex justify-end space-x-3">
                           <button
                             onClick={() => {
@@ -1684,14 +1688,14 @@ export default function AdminPage() {
                               setEditingNotification(null);
                               resetNotificationForm();
                             }}
-                            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                            className="px-4 py-2 text-gray-700 dark:text-gray-200 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition-all duration-200 border-2 border-transparent"
                           >
                             取消
                           </button>
                           <button
                             onClick={handleNotificationSubmit}
                             disabled={!notificationForm.content.trim()}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            className="px-4 py-2 bg-blue-500 dark:bg-dark-accent text-white rounded-md hover:bg-blue-600 dark:hover:bg-dark-accent/80 transition-all duration-200 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed border-2 border-transparent hover:border-blue-300 dark:hover:border-dark-accent/60"
                           >
                             {editingNotification ? '更新' : '創建'}
                           </button>
@@ -1708,13 +1712,13 @@ export default function AdminPage() {
               <div className="space-y-6">
                 {/* 使用說明和新增按鈕 */}
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex-1">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-700 rounded-lg p-4 flex-1 shadow-sm">
                     <div className="flex items-start">
                       <div className="flex-shrink-0">
-                        <EyeIcon className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <EyeIcon className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                       </div>
                       <div className="ml-3">
-                        <p className="text-sm text-blue-800">
+                        <p className="text-sm text-blue-800 dark:text-blue-300">
                           <strong>使用說明：</strong>點擊機器行可直接編輯機器信息，點擊右側按鈕管理限制規則。
                         </p>
                       </div>
@@ -1725,7 +1729,7 @@ export default function AdminPage() {
                   {currentUserRole === 'admin' && (
                     <button
                       onClick={() => setIsCreateMachineModalOpen(true)}
-                      className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+                      className="flex items-center px-4 py-2 bg-primary dark:bg-dark-accent text-white rounded-md hover:bg-primary/90 dark:hover:bg-dark-accent/80 transition-all duration-200 border-2 border-transparent hover:border-primary/30 dark:hover:border-dark-accent/60 shadow-md"
                     >
                       <PlusIcon className="h-5 w-5 mr-2" />
                       新增機器
@@ -1734,57 +1738,57 @@ export default function AdminPage() {
                 </div>
 
                 {/* 機器列表 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-dark-bg-secondary border-2 border-gray-200 dark:border-dark-border rounded-lg overflow-hidden shadow-lg">
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
+                      <thead className="bg-gray-50 dark:bg-dark-bg-primary">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                             機器信息
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider border-r border-gray-200 dark:border-dark-border">
                             狀態
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-text-secondary uppercase tracking-wider">
                             操作
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody className="bg-white dark:bg-dark-bg-secondary divide-y divide-gray-200 dark:divide-dark-border">
                         {machines.map((machine) => (
                           <tr 
                             key={machine.id} 
-                            className="hover:bg-gray-50 cursor-pointer transition-colors"
+                            className="hover:bg-gray-50 dark:hover:bg-dark-bg-primary cursor-pointer transition-all duration-200 hover:border-l-4 hover:border-dark-accent/40"
                             onClick={() => {
                               setEditingMachine(machine);
                             }}
                           >
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 border-r border-gray-200 dark:border-dark-border">
                               <div>
-                                <div className="text-sm font-medium text-gray-900">{machine.name}</div>
-                                <div className="text-sm text-gray-500 whitespace-pre-line">{machine.description}</div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-dark-text-primary">{machine.name}</div>
+                                <div className="text-sm text-gray-500 dark:text-dark-text-secondary whitespace-pre-line">{machine.description}</div>
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-dark-border">
                               <div className="space-y-1">
-                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                  machine.status === 'active' ? 'bg-green-100 text-green-800' : 
-                                  machine.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-gray-100 text-gray-800'
+                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
+                                  machine.status === 'active' ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700' : 
+                                  machine.status === 'maintenance' ? 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700' :
+                                  'bg-gray-100 dark:bg-gray-800/50 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600'
                                 }`}>
                                   {machine.status === 'active' ? '啟用中' : 
                                    machine.status === 'maintenance' ? '維護中' : 
                                    machine.status === 'limited' ? '限制使用' : '已停用'}
                                 </span>
                                 {machine.restriction_status !== 'none' && (
-                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                    machine.restriction_status === 'blocked' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${
+                                    machine.restriction_status === 'blocked' ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700' : 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700'
                                   }`}>
                                     {machine.restriction_status === 'blocked' ? '已封鎖' : '有限制'}
                                   </span>
                                 )}
                                 {machine.restriction_count > 0 && (
-                                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
                                     {machine.restriction_count} 個限制規則
                                   </span>
                                 )}
@@ -1797,7 +1801,7 @@ export default function AdminPage() {
                                     e.stopPropagation(); // 防止觸發行點擊事件
                                     setEditingMachine(machine);
                                   }}
-                                  className="text-blue-600 hover:text-blue-900 p-1 rounded-md hover:bg-blue-50"
+                                  className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 border-2 border-transparent hover:border-blue-200 dark:hover:border-blue-600"
                                   title="編輯機器"
                                 >
                                   <PencilIcon className="h-4 w-4" />
@@ -1808,7 +1812,7 @@ export default function AdminPage() {
                                     setSelectedMachine(machine);
                                     fetchMachineRestrictions(machine.id);
                                   }}
-                                  className="text-green-600 hover:text-green-900 p-1 rounded-md hover:bg-green-50"
+                                  className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-1 rounded-md hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 border-2 border-transparent hover:border-green-200 dark:hover:border-green-600"
                                   title="管理限制"
                                 >
                                   <EyeIcon className="h-4 w-4" />
@@ -1820,7 +1824,7 @@ export default function AdminPage() {
                                       e.stopPropagation(); // 防止觸發行點擊事件
                                       handleDeleteMachine(machine);
                                     }}
-                                    className="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50"
+                                    className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 border-2 border-transparent hover:border-red-200 dark:hover:border-red-600"
                                     title="刪除機器"
                                   >
                                     <TrashIcon className="h-4 w-4" />
@@ -1836,8 +1840,17 @@ export default function AdminPage() {
                   
                   {machines.length === 0 && (
                     <div className="text-center py-12">
-                      <EyeIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">沒有找到符合條件的機器</p>
+                      <div className="flex flex-col items-center">
+                        <div className="bg-gray-100 dark:bg-gray-800/50 rounded-full p-3 mb-4">
+                          <EyeIcon className="h-12 w-12 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary mb-2">
+                          沒有找到符合條件的機器
+                        </h3>
+                        <p className="text-gray-500 dark:text-dark-text-secondary text-sm">
+                          點擊上方「新增機器」按鈕開始建立第一台機器
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -2081,13 +2094,13 @@ function MachineRestrictionsModal({
   if (!isOpen || !machine) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto touch-manipulation">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-4 sm:p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto touch-manipulation border-2 border-gray-200 dark:border-dark-border shadow-xl">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium">機器限制管理 - {machine.name}</h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">機器限制管理 - {machine.name}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-2 -m-2 touch-manipulation"
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-2 -m-2 touch-manipulation transition-colors duration-200"
             aria-label="關閉"
           >
             <XMarkIcon className="h-6 w-6" />
@@ -2096,18 +2109,18 @@ function MachineRestrictionsModal({
 
         {/* 創建限制表單 */}
         {showCreateForm && (
-          <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <h4 className="text-md font-medium mb-4">創建限制規則</h4>
+          <div className="mb-6 p-4 border-2 border-gray-200 dark:border-dark-border rounded-lg bg-gray-50 dark:bg-dark-bg-primary">
+            <h4 className="text-md font-medium mb-4 text-gray-900 dark:text-dark-text-primary">創建限制規則</h4>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                   限制類型
                 </label>
                 <select
                   value={newRestriction.restriction_type}
                   onChange={(e) => setNewRestriction({...newRestriction, restriction_type: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                 >
                   <option value="year_limit">年份限制</option>
                   <option value="usage_limit">使用次數限制</option>
@@ -2115,7 +2128,7 @@ function MachineRestrictionsModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                   限制規則
                 </label>
                 {newRestriction.restriction_type === 'year_limit' ? (
@@ -2125,7 +2138,7 @@ function MachineRestrictionsModal({
                         <select
                           value={newRestriction.year_operator}
                           onChange={(e) => setNewRestriction({...newRestriction, year_operator: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                         >
                           <option value="lt">小於</option>
                           <option value="lte">小於等於</option>
@@ -2142,18 +2155,18 @@ function MachineRestrictionsModal({
                           placeholder="民國年份 (如: 113)"
                           min="100"
                           max="150"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                         />
                       </div>
-                      <div className="flex items-center px-2 text-sm text-gray-600">
+                      <div className="flex items-center px-2 text-sm text-gray-600 dark:text-dark-text-secondary">
                         年
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-dark-text-secondary">
                       例如：選擇「小於等於 113」表示限制民國113年以前入學的用戶
                     </div>
                     {newRestriction.year_value && (
-                      <div className="text-xs text-blue-600">
+                      <div className="text-xs text-blue-600 dark:text-blue-400">
                         民國{newRestriction.year_value}年 = 西元{parseInt(newRestriction.year_value) + 1911}年
                       </div>
                     )}
@@ -2162,7 +2175,7 @@ function MachineRestrictionsModal({
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 gap-3">
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                        <label className="block text-xs font-medium text-gray-600 dark:text-dark-text-secondary mb-1">
                           滾動窗口大小（時段數）
                         </label>
                         <input
@@ -2172,14 +2185,14 @@ function MachineRestrictionsModal({
                           placeholder="例如: 13"
                           min="1"
                           max="50"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                         />
-                        <div className="text-xs text-gray-400 mt-1">
+                        <div className="text-xs text-gray-400 dark:text-dark-text-secondary mt-1">
                           檢查窗口的時段數量
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                        <label className="block text-xs font-medium text-gray-600 dark:text-dark-text-secondary mb-1">
                           窗口內最大預約次數
                         </label>
                         <input
@@ -2189,16 +2202,16 @@ function MachineRestrictionsModal({
                           placeholder="例如: 12"
                           min="1"
                           max="100"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                         />
-                        <div className="text-xs text-gray-400 mt-1">
+                        <div className="text-xs text-gray-400 dark:text-dark-text-secondary mt-1">
                           在滾動窗口內允許的最大預約次數
               </div>
                       </div>
                     </div>
-                    <div className="bg-green-50 p-3 rounded-md">
-                      <div className="text-xs text-green-800 font-medium mb-2">✨ 新滾動窗口限制機制說明：</div>
-                      <div className="text-xs text-green-700 space-y-1">
+                    <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md border-2 border-green-200 dark:border-green-700">
+                      <div className="text-xs text-green-800 dark:text-green-300 font-medium mb-2">✨ 新滾動窗口限制機制說明：</div>
+                      <div className="text-xs text-green-700 dark:text-green-300 space-y-1">
                         <div>• 一天分為6個時間段：0-4時、4-8時、8-12時、12-16時、16-20時、20-24時</div>
                         <div>• 檢查任意連續N個時段內，是否超過最大預約次數</div>
                         <div>• 不需要連續使用才觸發，更靈活和公平</div>
@@ -2206,7 +2219,7 @@ function MachineRestrictionsModal({
                       </div>
                     </div>
                     {newRestriction.window_size && newRestriction.max_bookings && (
-                      <div className="text-xs text-green-600 bg-green-50 p-2 rounded">
+                      <div className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-2 rounded border border-green-200 dark:border-green-700">
                         <strong>規則預覽：</strong>任意連續{newRestriction.window_size}個時段內，
                         最多只能預約{newRestriction.max_bookings}次。
                         窗口大小：{parseInt(newRestriction.window_size) * 4}小時
@@ -2217,30 +2230,30 @@ function MachineRestrictionsModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                   開始時間 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="datetime-local"
                   value={newRestriction.start_time}
                   onChange={(e) => setNewRestriction({...newRestriction, start_time: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
                   結束時間 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="datetime-local"
                   value={newRestriction.end_time}
                   onChange={(e) => setNewRestriction({...newRestriction, end_time: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
                   required
                 />
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-gray-500 dark:text-dark-text-secondary mt-1">
                   限制規則只在此時間範圍內生效
                 </div>
               </div>
@@ -2249,7 +2262,7 @@ function MachineRestrictionsModal({
             <div className="flex justify-end mt-4 space-x-2">
               <button
                 onClick={() => setShowCreateForm(false)}
-                className="px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 active:bg-gray-100 touch-manipulation min-h-[44px] flex items-center justify-center"
+                className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md hover:bg-gray-50 dark:hover:bg-gray-500 active:bg-gray-100 dark:active:bg-gray-400 touch-manipulation min-h-[44px] flex items-center justify-center transition-all duration-200"
               >
                 取消
               </button>
@@ -2265,7 +2278,7 @@ function MachineRestrictionsModal({
                       !newRestriction.window_size || !newRestriction.max_bookings
                     : false)
                 }
-                className="px-4 py-3 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[44px] flex items-center justify-center"
+                className="px-4 py-3 text-sm font-medium text-white bg-blue-600 dark:bg-dark-accent border border-transparent rounded-md hover:bg-blue-700 dark:hover:bg-dark-accent/80 active:bg-blue-800 dark:active:bg-dark-accent/60 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[44px] flex items-center justify-center transition-all duration-200"
               >
                 創建
               </button>
@@ -2276,10 +2289,10 @@ function MachineRestrictionsModal({
         {/* 限制列表 */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h4 className="text-md font-medium">當前限制規則</h4>
+            <h4 className="text-md font-medium text-gray-900 dark:text-dark-text-primary">當前限制規則</h4>
             <button
               onClick={() => setShowCreateForm(!showCreateForm)}
-              className="px-4 py-3 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 active:bg-blue-800 touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="px-4 py-3 text-sm font-medium text-white bg-blue-600 dark:bg-dark-accent border border-transparent rounded-md hover:bg-blue-700 dark:hover:bg-dark-accent/80 active:bg-blue-800 dark:active:bg-dark-accent/60 touch-manipulation min-h-[44px] flex items-center justify-center transition-all duration-200"
             >
               {showCreateForm ? '取消' : '新增限制'}
             </button>
@@ -2287,28 +2300,28 @@ function MachineRestrictionsModal({
 
           {loading ? (
             <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-dark-accent mx-auto"></div>
             </div>
           ) : restrictions.length > 0 ? (
             <div className="space-y-3">
               {restrictions.map((restriction) => (
-                <div key={restriction.id} className="p-4 border border-gray-200 rounded-lg">
+                <div key={restriction.id} className="p-4 border-2 border-gray-200 dark:border-dark-border rounded-lg bg-white dark:bg-dark-bg-primary">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded border border-blue-200 dark:border-blue-700">
                           {restriction.restriction_type === 'year_limit' ? '年份限制' : 
                           restriction.restriction_type === 'usage_limit' ? '使用次數限制' : '未知類型'}
                         </span>
-                        <span className={`px-2 py-1 text-xs font-medium rounded ${
-                          restriction.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        <span className={`px-2 py-1 text-xs font-medium rounded border ${
+                          restriction.is_active ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700' : 'bg-gray-100 dark:bg-gray-800/50 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600'
                         }`}>
                           {restriction.is_active ? '生效中' : '已停用'}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700 mb-2">{restriction.restriction_rule}</p>
+                      <p className="text-sm text-gray-700 dark:text-dark-text-secondary mb-2">{restriction.restriction_rule}</p>
                       {(restriction.start_time || restriction.end_time) && (
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 dark:text-dark-text-secondary">
                           {restriction.start_time && restriction.end_time ? (
                             <span>有效期間：{new Date(restriction.start_time).toLocaleString('zh-TW')} 至 {new Date(restriction.end_time).toLocaleString('zh-TW')}</span>
                           ) : restriction.start_time ? (
@@ -2321,7 +2334,7 @@ function MachineRestrictionsModal({
                     </div>
                     <button
                       onClick={() => handleDeleteRestriction(restriction.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-md transition-all duration-200 border-2 border-transparent hover:border-red-200 dark:hover:border-red-600"
                     >
                       <TrashIcon className="h-4 w-4" />
                     </button>
@@ -2330,8 +2343,13 @@ function MachineRestrictionsModal({
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              尚未設定限制規則
+            <div className="text-center py-8 text-gray-500 dark:text-dark-text-secondary">
+              <div className="flex flex-col items-center">
+                <div className="bg-gray-100 dark:bg-gray-800/50 rounded-full p-3 mb-4">
+                  <EyeIcon className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+                </div>
+                <p>尚未設定限制規則</p>
+              </div>
             </div>
           )}
         </div>
@@ -2385,15 +2403,15 @@ function MachineEditModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 w-full max-w-md border-2 border-gray-200 dark:border-dark-border shadow-xl">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">
             {machine ? '編輯機器' : '新增機器'}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
@@ -2401,41 +2419,41 @@ function MachineEditModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
               機器名稱 *
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
               機器描述 * 
-              <span className="text-xs text-gray-500 font-normal ml-2">(支持換行顯示)</span>
+              <span className="text-xs text-gray-500 dark:text-dark-text-secondary font-normal ml-2">(支持換行顯示)</span>
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               rows={4}
               placeholder="請輸入機器描述，可以換行輸入多行說明..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
               機器狀態
             </label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({...formData, status: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
             >
               <option value="active">啟用中</option>
               <option value="maintenance">維護中</option>
@@ -2444,13 +2462,13 @@ function MachineEditModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text-secondary mb-2">
               限制狀態
             </label>
             <select
               value={formData.restriction_status}
               onChange={(e) => setFormData({...formData, restriction_status: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-dark-accent dark:bg-dark-bg-primary dark:text-dark-text-primary"
             >
               <option value="none">無限制</option>
               <option value="limited">部分限制</option>
@@ -2462,13 +2480,13 @@ function MachineEditModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md hover:bg-gray-50 dark:hover:bg-gray-500 transition-all duration-200"
             >
               取消
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-dark-accent border border-transparent rounded-md hover:bg-blue-700 dark:hover:bg-dark-accent/80 transition-all duration-200"
             >
               {machine ? '更新' : '創建'}
             </button>

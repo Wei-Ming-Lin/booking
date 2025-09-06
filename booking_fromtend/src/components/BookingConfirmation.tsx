@@ -175,7 +175,7 @@ export default function BookingConfirmation({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black bg-opacity-25 dark:bg-opacity-50" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -189,23 +189,23 @@ export default function BookingConfirmation({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all">
                 {/* 標題區域 */}
                 <Dialog.Title
                   as="div"
                   className="flex items-center justify-between mb-4"
                 >
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-green-100">
-                      <CheckCircleIcon className="w-6 h-6 text-green-600" />
+                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                      <CheckCircleIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
                     </div>
-                    <h3 className="ml-3 text-lg font-medium leading-6 text-gray-900">
+                    <h3 className="ml-3 text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
                       確認預約
                     </h3>
                   </div>
                   <button
                     type="button"
-                    className="rounded-md text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="rounded-md text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                     onClick={onClose}
                   >
                     <XMarkIcon className="h-6 w-6 text-green-500" />
@@ -214,55 +214,55 @@ export default function BookingConfirmation({
 
                 {/* 確認訊息 */}
                 <div className="mt-2 mb-4">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     您即將預約以下時段，請確認預約資訊無誤。
                   </p>
                 </div>
 
                 {/* 預約詳情表格 */}
-                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
                   <div className="overflow-hidden">
                     <table className="min-w-full">
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             機器名稱
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-gray-100">
                             {machine.name}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             預約日期
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-gray-100">
                             {date}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             預約時間
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-gray-100">
                             {time} - {endTime} (4小時)
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             機器狀態
                           </td>
                           <td className="py-2">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
                               可使用
                             </span>
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             使用者
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-gray-100">
                             {session?.user?.email}
                           </td>
                         </tr>
@@ -275,7 +275,7 @@ export default function BookingConfirmation({
                 <div className="mt-6 flex justify-end gap-3">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                    className="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                     onClick={onClose}
                   >
                     重新選擇

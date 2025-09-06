@@ -75,7 +75,7 @@ export default function CancelBookingConfirmation({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black bg-opacity-25 dark:bg-opacity-50" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -89,23 +89,23 @@ export default function CancelBookingConfirmation({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-dark-bg-secondary p-6 text-left align-middle shadow-xl dark:shadow-dark-bg-primary/20 transition-all border dark:border-dark-border">
                 {/* 標題區域 */}
                 <Dialog.Title
                   as="div"
                   className="flex items-center justify-between mb-4"
                 >
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100">
-                      <ExclamationTriangleIcon className="w-6 h-6 text-red-600" />
+                    <div className="flex-shrink-0 w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+                      <ExclamationTriangleIcon className="w-6 h-6 text-red-600 dark:text-red-400" />
                     </div>
-                    <h3 className="ml-3 text-lg font-medium leading-6 text-gray-900">
+                    <h3 className="ml-3 text-lg font-medium leading-6 text-gray-900 dark:text-dark-text-primary">
                       取消預約確認
                     </h3>
                   </div>
                   <button
                     type="button"
-                    className="rounded-md text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
                     onClick={onCancel}
                   >
                     <XMarkIcon className="h-6 w-6 text-red-500" />
@@ -114,46 +114,46 @@ export default function CancelBookingConfirmation({
 
                 {/* 警告訊息 */}
                 <div className="mt-2 mb-4">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-dark-text-secondary">
                     您確定要取消以下預約嗎？此操作無法復原。
                   </p>
                 </div>
 
                 {/* 預約詳情表格 */}
-                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="bg-gray-50 dark:bg-dark-bg-tertiary rounded-lg p-4 mb-6">
                   <div className="overflow-hidden">
                     <table className="min-w-full">
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 dark:divide-dark-border">
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-dark-text-secondary whitespace-nowrap">
                             機器名稱
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-dark-text-primary">
                             {machineName}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-dark-text-secondary whitespace-nowrap">
                             預約日期
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-dark-text-primary">
                             {date}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-dark-text-secondary whitespace-nowrap">
                             預約時間
                           </td>
-                          <td className="py-2 text-sm text-gray-900">
+                          <td className="py-2 text-sm text-gray-900 dark:text-dark-text-primary">
                             {time} - {endTime} (4小時)
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                          <td className="py-2 pr-4 text-sm font-medium text-gray-500 dark:text-dark-text-secondary whitespace-nowrap">
                             狀態
                           </td>
                           <td className="py-2">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">
                               {bookingDetail.status === 'active' ? '進行中' : bookingDetail.status}
                             </span>
                           </td>
@@ -167,14 +167,14 @@ export default function CancelBookingConfirmation({
                 <div className="mt-6 flex justify-end gap-3">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                    className="inline-flex justify-center rounded-md border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-bg-tertiary px-4 py-2 text-sm font-medium text-gray-700 dark:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                     onClick={onCancel}
                   >
                     保留預約
                   </button>
                   <button
                     type="button"
-                    className={`inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${
+                    className={`inline-flex justify-center rounded-md border border-transparent bg-red-600 dark:bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${
                       isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
                     }`}
                     onClick={handleConfirm}

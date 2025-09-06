@@ -24,30 +24,30 @@ const getStatusConfig = (status: string) => {
     case 'active':
       return {
         label: '可使用',
-        bgColor: 'bg-status-available-bg',
-        textColor: 'text-status-available-text',
-        borderColor: 'border-status-available-border'
+        bgColor: 'bg-status-available-bg dark:bg-status-available-dark-bg',
+        textColor: 'text-status-available-text dark:text-status-available-dark-text',
+        borderColor: 'border-status-available-border dark:border-status-available-dark-border'
       };
     case 'maintenance':
       return {
         label: '維護模式',
-        bgColor: 'bg-status-maintenance-bg',
-        textColor: 'text-status-maintenance-text',
-        borderColor: 'border-status-maintenance-border'
+        bgColor: 'bg-status-maintenance-bg dark:bg-status-maintenance-dark-bg',
+        textColor: 'text-status-maintenance-text dark:text-status-maintenance-dark-text',
+        borderColor: 'border-status-maintenance-border dark:border-status-maintenance-dark-border'
       };
     case 'limited':
       return {
         label: '限流中',
-        bgColor: 'bg-status-limited-bg',
-        textColor: 'text-status-limited-text',
-        borderColor: 'border-status-limited-border'
+        bgColor: 'bg-status-limited-bg dark:bg-status-limited-dark-bg',
+        textColor: 'text-status-limited-text dark:text-status-limited-dark-text',
+        borderColor: 'border-status-limited-border dark:border-status-limited-dark-border'
       };
     default:
       return {
         label: '未知狀態',
-        bgColor: 'bg-gray-100',
-        textColor: 'text-gray-600',
-        borderColor: 'border-gray-300'
+        bgColor: 'bg-gray-100 dark:bg-gray-800',
+        textColor: 'text-gray-600 dark:text-gray-300',
+        borderColor: 'border-gray-300 dark:border-gray-600'
       };
   }
 };
@@ -675,12 +675,12 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   // 如果權限檢查未完成，顯示載入狀態
   if (!accessCheckCompleted) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-dark-bg-primary dark:to-dark-bg-secondary p-4">
         <div className="max-w-md mx-auto mt-20">
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mx-auto mb-4" />
-            <h1 className="text-xl font-bold text-gray-900 mb-2">驗證權限中</h1>
-            <p className="text-gray-600">正在檢查您的訪問權限，請稍候...</p>
+          <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg dark:shadow-dark-bg-primary/20 p-8 text-center border dark:border-dark-border">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary dark:border-dark-accent border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mx-auto mb-4" />
+            <h1 className="text-xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">驗證權限中</h1>
+            <p className="text-gray-600 dark:text-dark-text-secondary">正在檢查您的訪問權限，請稍候...</p>
           </div>
         </div>
       </div>
@@ -690,22 +690,22 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   // 如果權限被拒絕，顯示錯誤頁面
   if (accessDenied) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-dark-bg-primary dark:to-dark-bg-secondary p-4">
         <div className="max-w-md mx-auto mt-20">
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg dark:shadow-dark-bg-primary/20 p-8 text-center border dark:border-dark-border">
+            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">訪問被拒絕</h1>
-            <p className="text-gray-600 mb-6">{accessDenied}</p>
-            <div className="text-sm text-gray-500 mb-4">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-dark-text-primary mb-2">訪問被拒絕</h1>
+            <p className="text-gray-600 dark:text-dark-text-secondary mb-6">{accessDenied}</p>
+            <div className="text-sm text-gray-500 dark:text-dark-text-secondary mb-4">
               正在返回首頁...
             </div>
             <button
               onClick={() => router.push('/')}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 dark:bg-dark-accent text-white rounded hover:bg-blue-700 dark:hover:bg-dark-accent-dark transition-colors"
             >
               立即返回首頁
             </button>
@@ -718,11 +718,11 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   // 如果還在載入中或權限檢查未完成，顯示載入頁面
   if (isLoading || !accessCheckCompleted) {
     return (
-      <div className="min-h-screen pt-20 pb-10 bg-muted">
+      <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
-            <p className="ml-4 text-text-secondary">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary dark:border-dark-accent border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+            <p className="ml-4 text-text-secondary dark:text-dark-text-secondary">
               {!accessCheckCompleted ? '檢查權限中...' : (isLoading ? '載入機器資料中...' : '載入中...')}
             </p>
           </div>
@@ -733,16 +733,16 @@ export default function MachinePage({ params }: { params: { id: string } }) {
 
   if (!finalMachine) {
     return (
-      <div className="min-h-screen pt-20 pb-10 bg-muted">
+      <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-surface rounded-lg shadow-sm p-6">
-            <h1 className="text-3xl font-bold text-text-primary mb-4">找不到機器</h1>
-            <p className="text-text-secondary mb-4">
+          <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 p-6 border dark:border-dark-border">
+            <h1 className="text-3xl font-bold text-text-primary dark:text-dark-text-primary mb-4">找不到機器</h1>
+            <p className="text-text-secondary dark:text-dark-text-secondary mb-4">
               抱歉，找不到ID為 {params.id} 的機器。
             </p>
             <button
               onClick={() => router.push('/')}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-primary text-white hover:bg-primary-dark focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 bg-primary dark:bg-dark-accent text-white hover:bg-primary-dark dark:hover:bg-dark-accent-dark focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-dark-accent"
             >
               返回首頁
             </button>
@@ -753,16 +753,16 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="min-h-screen pt-20 pb-10 bg-muted">
+    <main className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* 機器資訊 */}
-        <div className="bg-surface rounded-lg shadow-sm p-6 mb-8 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg shadow-sm p-6 mb-8 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 dark:shadow-dark-bg-tertiary/20 border-2 border-transparent dark:border-dark-accent/30 hover:border-primary/30 dark:hover:border-dark-accent/60">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-4">
-                <h1 className="text-3xl font-bold text-text-primary group">
+                <h1 className="text-3xl font-bold text-text-primary dark:text-dark-text-primary group">
                   {finalMachine.name}
-                  <div className="h-0.5 w-0 group-hover:w-full bg-secondary transition-all duration-300" />
+                  <div className="h-0.5 w-0 group-hover:w-full bg-secondary dark:bg-dark-accent transition-all duration-300" />
                 </h1>
                 {/* 狀態標籤 */}
                 {(() => {
@@ -774,19 +774,19 @@ export default function MachinePage({ params }: { params: { id: string } }) {
                   );
                 })()}
               </div>
-              <p className="text-text-secondary whitespace-pre-line">{finalMachine.description}</p>
+              <p className="text-text-secondary dark:text-dark-text-secondary whitespace-pre-line">{finalMachine.description}</p>
               
               {/* 維護模式說明 */}
               {finalMachine.status === 'maintenance' && (
-                <div className="mt-4 bg-amber-50 rounded-lg p-4 border border-amber-200">
+                <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border-2 border-amber-200 dark:border-amber-400/60 shadow-sm dark:shadow-amber-500/10">
                   <div className="flex items-center">
-                    <svg className="w-5 h-5 text-amber-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span className="font-medium text-amber-800">維護模式</span>
+                    <span className="font-medium text-amber-800 dark:text-amber-200">維護模式</span>
                   </div>
-                  <p className="text-amber-700 text-sm mt-2">
+                  <p className="text-amber-700 dark:text-amber-300 text-sm mt-2">
                     此機器目前處於維護模式，仍可正常預約使用。管理員可能會預約特定時段進行維護工作，請留意相關通知。
                   </p>
                 </div>
@@ -823,23 +823,23 @@ export default function MachinePage({ params }: { params: { id: string } }) {
                       // 檢查是否是新的滾動窗口格式
                       if (rule.restriction_type === 'rolling_window_limit') {
                         return (
-                          <div key={index} className="bg-green-50 rounded-lg p-4 border border-green-200">
-                            <h3 className="text-lg font-semibold text-green-800 mb-2 flex items-center">
+                          <div key={index} className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border-2 border-green-200 dark:border-green-400/60 shadow-sm dark:shadow-green-500/10">
+                            <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2 flex items-center">
                               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
                               滾動窗口使用限制
                             </h3>
-                            <div className="text-green-700 space-y-2">
+                            <div className="text-green-700 dark:text-green-300 space-y-2">
                               <p className="font-medium">
                                 {rule.description || `任意連續${rule.window_size}個時段內，最多只能預約${rule.max_bookings}次`}
                               </p>
-                              <div className="text-sm text-green-600 bg-green-100 rounded p-2">
+                              <div className="text-sm text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-800/30 rounded p-2 border border-green-200 dark:border-green-600/50">
                                 <div>• 滾動窗口大小：<span className="font-medium">{rule.window_size} 個時段</span> （{rule.window_size * 4} 小時）</div>
                                 <div>• 窗口內最大預約：<span className="font-medium">{rule.max_bookings} 次</span></div>
                                 <div>• 限制類型：<span className="font-medium">滾動窗口（更公平的限制機制）</span></div>
                               </div>
-                              <div className="text-xs text-green-600 bg-green-50 p-2 rounded border border-green-200">
+                              <div className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-2 rounded border-2 border-green-200 dark:border-green-600/50">
                                 <strong>說明：</strong>系統會檢查任意連續{rule.window_size}個時段內的預約次數，
                                 如果達到{rule.max_bookings}次上限則暫時無法預約，直到滾動窗口內的預約次數降低。
                               </div>
@@ -897,32 +897,32 @@ export default function MachinePage({ params }: { params: { id: string } }) {
                     </div>
                     
                     {cooldownSlots && cooldownSlots.length > 0 && (
-                      <div className="mt-3 p-3 rounded-md bg-orange-100 border border-orange-200">
+                      <div className="mt-3 p-3 rounded-md bg-orange-100 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-400/60 shadow-sm dark:shadow-orange-500/10">
                         <div className="flex items-center">
-                          <svg className="w-5 h-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 text-orange-600 dark:text-orange-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span className="font-medium text-orange-800">部分時間段處於冷卻期</span>
+                          <span className="font-medium text-orange-800 dark:text-orange-200">部分時間段處於冷卻期</span>
                         </div>
-                        <p className="text-orange-700 text-xs mt-2">
+                        <p className="text-orange-700 dark:text-orange-300 text-xs mt-2">
                           您已達到連續使用上限，接下來 {cooldownSlots.length} 個時間段將顯示為"冷卻"狀態，無法預約
                         </p>
-                        <p className="text-orange-700 text-xs mt-1">
+                        <p className="text-orange-700 dark:text-orange-300 text-xs mt-1">
                           冷卻期過後您可以重新開始預約使用
                         </p>
                       </div>
                     )}
                     
                     {(!cooldownSlots || cooldownSlots.length === 0) && usageInfo.usage_info && (
-                      <div className="mt-3 p-3 rounded-md bg-green-100 border border-green-200">
+                      <div className="mt-3 p-3 rounded-md bg-green-100 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-400/60 shadow-sm dark:shadow-green-500/10">
                         <div className="flex items-center">
-                          <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span className="font-medium text-green-800">可以正常使用</span>
+                          <span className="font-medium text-green-800 dark:text-green-200">可以正常使用</span>
                         </div>
                         {usageInfo.usage_info.consecutive_usage_count !== undefined && (
-                          <p className="text-green-700 text-xs mt-2">
+                          <p className="text-green-700 dark:text-green-300 text-xs mt-2">
                             當前連續使用次數：{usageInfo.usage_info.consecutive_usage_count} / {usageInfo.max_usages}
                           </p>
                         )}
@@ -936,19 +936,19 @@ export default function MachinePage({ params }: { params: { id: string } }) {
         </div>
 
         {/* 預約區塊 */}
-        <div className="bg-surface rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-bold text-text-primary mb-6 relative inline-block">
+        <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg shadow-sm p-6 dark:shadow-dark-bg-tertiary/20 border-2 border-transparent dark:border-dark-accent/30 hover:border-primary/30 dark:hover:border-dark-accent/60 transition-all duration-300">
+          <h2 className="text-xl font-bold text-text-primary dark:text-dark-text-primary mb-6 relative inline-block">
             選擇預約時段
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary dark:bg-dark-accent transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
           </h2>
           
           <div className="flex flex-col lg:flex-row gap-8">
             {/* 選擇日期區塊 */}
             <div className="w-full lg:w-1/4">
-              <div className="bg-surface rounded-lg border border-primary/20 p-4 transition-all duration-300 hover:border-primary hover:shadow-md">
-                <h3 className="text-lg font-medium text-text-primary mb-4 relative inline-block group">
+              <div className="bg-surface dark:bg-dark-bg-tertiary rounded-lg border-2 border-primary/20 dark:border-dark-accent/40 p-4 transition-all duration-300 hover:border-primary dark:hover:border-dark-accent hover:shadow-md dark:hover:shadow-dark-accent/20 hover:scale-[1.02]">
+                <h3 className="text-lg font-medium text-text-primary dark:text-dark-text-primary mb-4 relative inline-block group">
                   選擇日期
-                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary dark:bg-dark-accent transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                 </h3>
                 <div className="calendar-container">
                   <DatePicker
@@ -986,11 +986,11 @@ export default function MachinePage({ params }: { params: { id: string } }) {
 
             {/* 時段選擇區塊 - 在手機版時會在下方 */}
             <div className="w-full lg:w-3/4">
-              <div className="bg-surface rounded-lg border border-primary/20 p-4 transition-all duration-300 hover:border-primary hover:shadow-md">
+              <div className="bg-surface dark:bg-dark-bg-tertiary rounded-lg border-2 border-primary/20 dark:border-dark-accent/40 p-4 transition-all duration-300 hover:border-primary dark:hover:border-dark-accent hover:shadow-md dark:hover:shadow-dark-accent/20">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-text-primary relative inline-block group">
+                  <h3 className="text-lg font-medium text-text-primary dark:text-dark-text-primary relative inline-block group">
                     可用時段
-                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary dark:bg-dark-accent transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                   </h3>
                   <div className="flex items-center gap-4">
                     {isRefreshing && (
