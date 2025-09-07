@@ -334,7 +334,7 @@ export default function AdminPage() {
               start_time: startTimeISO,
               end_time: endTimeISO,
               status: booking.status,
-              created_at: ''
+              created_at: booking.created_at || new Date().toISOString() // 提供默認值或使用當前時間
             });
           });
         }
@@ -605,43 +605,54 @@ export default function AdminPage() {
 
   // 獲取預約狀態配置
   const getBookingStatusConfig = (booking: BookingDetail) => {
-    const now = getTaipeiNow();
-    const startTime = parseISO(booking.start_time);
-    const endTime = parseISO(booking.end_time);
-    
-    if (booking.status === 'cancelled') {
+    try {
+      const now = getTaipeiNow();
+      const startTime = parseISO(booking.start_time);
+      const endTime = parseISO(booking.end_time);
+      
+      if (booking.status === 'cancelled') {
+        return {
+          text: '已取消',
+          bgColor: 'bg-gray-100',
+          textColor: 'text-gray-600',
+          icon: XMarkIcon
+        };
+      }
+      
+      if (isBefore(endTime, now)) {
+        return {
+          text: '已完成',
+          bgColor: 'bg-green-100',
+          textColor: 'text-green-700',
+          icon: CheckCircleIcon
+        };
+      }
+      
+      if (isBefore(startTime, now) && !isBefore(endTime, now)) {
+        return {
+          text: '進行中',
+          bgColor: 'bg-blue-100',
+          textColor: 'text-blue-700',
+          icon: ClockIcon
+        };
+      }
+      
       return {
-        text: '已取消',
+        text: '待開始',
+        bgColor: 'bg-yellow-100',
+        textColor: 'text-yellow-700',
+        icon: CalendarIcon
+      };
+    } catch (error) {
+      console.error('Error parsing booking times:', error, booking);
+      // 返回默認狀態
+      return {
+        text: '狀態未知',
         bgColor: 'bg-gray-100',
         textColor: 'text-gray-600',
-        icon: XMarkIcon
+        icon: ExclamationTriangleIcon
       };
     }
-    
-    if (isBefore(endTime, now)) {
-      return {
-        text: '已完成',
-        bgColor: 'bg-green-100',
-        textColor: 'text-green-700',
-        icon: CheckCircleIcon
-      };
-    }
-    
-    if (isBefore(startTime, now) && !isBefore(endTime, now)) {
-      return {
-        text: '進行中',
-        bgColor: 'bg-blue-100',
-        textColor: 'text-blue-700',
-        icon: ClockIcon
-      };
-    }
-    
-    return {
-      text: '待開始',
-      bgColor: 'bg-yellow-100',
-      textColor: 'text-yellow-700',
-      icon: CalendarIcon
-    };
   };
 
   // 切換月份
@@ -1458,7 +1469,10 @@ export default function AdminPage() {
                                         <div>
                                           <h4 className="text-sm font-medium text-gray-900 dark:text-dark-text-primary mb-1">預約時間</h4>
                                           <p className="text-sm text-gray-600 dark:text-dark-text-secondary">
-                                            {formatTaipeiTime(parseISO(booking.created_at), 'yyyy/MM/dd HH:mm')}
+                                            {booking.created_at && booking.created_at !== '' 
+                                              ? formatTaipeiTime(parseISO(booking.created_at), 'yyyy/MM/dd HH:mm')
+                                              : '未知時間'
+                                            }
                                           </p>
                                         </div>
                                       </div>
