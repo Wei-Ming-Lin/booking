@@ -270,14 +270,16 @@ def create_booking():
 
         # 檢查預約時間不能是過去的時間
         current_taipei_time = get_taipei_now()
-        if time_slot < current_taipei_time:
+        slot_end_time = time_slot + timedelta(hours=4)
+        if slot_end_time <= current_taipei_time:
             return jsonify({
                 'success': False,
                 'error': '無法預約過去的時段',
                 'error_type': 'past_time_slot',
                 'message': f'您選擇的時段 {time_slot.strftime("%Y/%m/%d %H:%M")} 已經過去，請選擇未來的時段',
                 'current_time': current_taipei_time.strftime("%Y/%m/%d %H:%M"),
-                'selected_time': time_slot.strftime("%Y/%m/%d %H:%M")
+                'selected_time': time_slot.strftime("%Y/%m/%d %H:%M"),
+                'slot_end_time': slot_end_time.strftime("%Y/%m/%d %H:%M")
             }), 400
 
         try:

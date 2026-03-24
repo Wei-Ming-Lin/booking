@@ -270,7 +270,7 @@ export default function ProfilePage() {
     const statusConfig = getStatusConfig(selectedBooking);
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 dark:bg-black/70">
         <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 max-w-md w-full mx-4 shadow-xl dark:shadow-dark-bg-primary/20 border border-gray-200 dark:border-dark-border">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-dark-text-primary">
@@ -423,7 +423,7 @@ export default function ProfilePage() {
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="min-h-screen pt-20 pb-10 bg-muted dark:bg-dark-bg-primary flex items-center justify-center">
+      <div className="min-h-screen pt-20 pb-10 bg-transparent flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary dark:border-dark-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-dark-text-secondary">載入中...</p>
@@ -439,7 +439,7 @@ export default function ProfilePage() {
   const sortedDates = Object.keys(groupedBookings).sort((a, b) => a.localeCompare(b));
 
   return (
-    <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
+    <div className="min-h-screen pt-5 pb-10 bg-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 p-6 mb-6 border dark:border-dark-border">
           {/* 頁面標題與月份導航 */}
@@ -452,7 +452,7 @@ export default function ProfilePage() {
             </div>
             
             {/* 月份選擇器 */}
-            <div className="mt-4 sm:mt-0 flex items-center space-x-2">
+            <div className="mt-4 sm:mt-0 flex flex-wrap items-center gap-2">
               <button 
                 onClick={() => changeMonth(-1)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-dark-bg-primary rounded-md text-gray-600 dark:text-dark-text-secondary hover:text-gray-900 dark:hover:text-dark-text-primary transition-all duration-200"
@@ -530,18 +530,18 @@ export default function ProfilePage() {
 
           {/* 月曆視圖 */}
           <div className="bg-white dark:bg-dark-bg-secondary border border-gray-200 dark:border-dark-border rounded-lg overflow-hidden">
-            {/* 星期標題 */}
-            <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b border-gray-200 dark:border-dark-border">
-              {['日', '一', '二', '三', '四', '五', '六'].map((day) => (
-                <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700 dark:text-dark-text-primary">
-                  {day}
+            <div className="overflow-x-auto apple-scrollbar">
+              <div className="min-w-[52rem]">
+                <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b border-gray-200 dark:border-dark-border">
+                  {['日', '一', '二', '三', '四', '五', '六'].map((day) => (
+                    <div key={day} className="p-4 text-center text-sm font-semibold text-gray-700 dark:text-dark-text-primary">
+                      {day}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            
-            {/* 日期網格 */}
-            <div className="grid grid-cols-7">
-              {generateCalendar().map((dayOrEmpty, index) => {
+                
+                <div className="grid grid-cols-7">
+                  {generateCalendar().map((dayOrEmpty, index) => {
                 if (typeof dayOrEmpty === 'number') {
                   const day = dayOrEmpty;
                   const dateStr = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
@@ -599,13 +599,15 @@ export default function ProfilePage() {
                     </div>
                   );
                 }
-              })}
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* 年月選擇器彈窗 */}
           {showYearMonthPicker && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 dark:bg-black/70">
               <div className="bg-white dark:bg-dark-bg-secondary rounded-lg p-6 w-80 border border-gray-200 dark:border-dark-border shadow-lg dark:shadow-dark-bg-primary/20">
                 <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-dark-text-primary">選擇年月</h3>
                 
@@ -657,7 +659,7 @@ export default function ProfilePage() {
 
           {/* 日期詳細預約模態框 */}
           {showDateDetails && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 dark:bg-black/70">
               <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg dark:shadow-dark-bg-primary/20 w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-200 dark:border-dark-border">
                 {/* 模態框標題 */}
                 <div className="px-6 py-4 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">

@@ -955,7 +955,7 @@ export default function AdminPage() {
 
   if (status === 'loading' || isLoading) {
   return (
-      <div className="min-h-screen pt-10 pb-10 bg-muted dark:bg-dark-bg-primary flex items-center justify-center">
+      <div className="min-h-screen pt-10 pb-10 bg-transparent flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-primary dark:border-dark-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-dark-text-secondary">載入中...</p>
@@ -969,7 +969,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen pt-10 pb-10 bg-muted dark:bg-dark-bg-primary">
+    <div className="min-h-screen pt-10 pb-10 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 mb-6 border dark:border-dark-border">
           {/* 頁面標題 */}

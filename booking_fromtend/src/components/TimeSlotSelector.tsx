@@ -1,25 +1,42 @@
 'use client';
 
 import { TimeSlot } from '@/types';
-import { format, startOfWeek, addDays, isSameDay, isAfter, isBefore, startOfDay, isWithinInterval } from 'date-fns';
+import {
+  addDays,
+  format,
+  isBefore,
+  isSameDay,
+  isWithinInterval,
+  startOfDay,
+  startOfWeek,
+} from 'date-fns';
 import { zhTW } from 'date-fns/locale';
-import { useState, useMemo, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getTaipeiNow } from '@/lib/timezone';
 
 interface TimeSlotSelectorProps {
   selectedDate: Date;
-  onSelect: (slot: any) => void; // 暫時使用 any
+  onSelect: (slot: TimeSlot | any) => void;
   bookedSlots?: string[];
-  bookingDetails?: any[]; // 新增：詳細預約信息
-  currentUserEmail?: string; // 新增：當前用戶郵箱
-  onShowCancelConfirm?: (bookingDetail: any) => void; // 新增：顯示取消確認對話框
-  cooldownSlots?: string[]; // 修改：直接從後端獲取的冷卻期時間段
-  usageInfo?: any; // 修改：從後端獲取的使用情況信息
+  bookingDetails?: any[];
+  currentUserEmail?: string;
+  onShowCancelConfirm?: (bookingDetail: any) => void;
+  cooldownSlots?: string[];
+  usageInfo?: any;
   dateRange: {
     min: Date;
     max: Date;
   };
 }
+
+const TIME_SLOTS = [
+  { time: '凌晨 12:00', value: '00:00' },
+  { time: '凌晨 4:00', value: '04:00' },
+  { time: '早上 8:00', value: '08:00' },
+  { time: '中午 12:00', value: '12:00' },
+  { time: '下午 4:00', value: '16:00' },
+  { time: '晚上 8:00', value: '20:00' },
+];
 
 export default function TimeSlotSelector({
   selectedDate,
@@ -34,166 +51,116 @@ export default function TimeSlotSelector({
 }: TimeSlotSelectorProps) {
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
 
-  // 生成一週的日期，從週一開始
   const weekDates = useMemo(() => {
-    const start = startOfWeek(selectedDate, { weekStartsOn: 1 }); // 從週一開始
-    return Array.from({ length: 7 }, (_, i) => {
-      const date = addDays(start, i);
-      return startOfDay(date); // 確保每個日期都是從當天開始
-    });
+    const start = startOfWeek(selectedDate, { weekStartsOn: 1 });
+    return Array.from({ length: 7 }, (_, index) => startOfDay(addDays(start, index)));
   }, [selectedDate]);
 
-  // 當選擇的日期改變時，清除已選擇的時段
   useEffect(() => {
     setSelectedSlotId(null);
   }, [selectedDate]);
 
-  // 生成固定的時段
-  const timeSlots = [
-    { time: '上午12:00', value: '00:00' },
-    { time: '上午4:00', value: '04:00' },
-    { time: '上午8:00', value: '08:00' },
-    { time: '下午12:00', value: '12:00' },
-    { time: '下午4:00', value: '16:00' },
-    { time: '下午8:00', value: '20:00' },
-  ];
+  const getSlotDateRange = (date: Date, value: string) => {
+    const start = startOfDay(date);
+    const [hours] = value.split(':').map(Number);
+    start.setHours(hours, 0, 0, 0);
+
+    const end = new Date(start);
+    end.setHours(hours + 4, 0, 0, 0);
+
+    return { start, end };
+  };
 
   const handleSlotClick = (date: Date, timeSlot: { time: string; value: string }) => {
-    const now = getTaipeiNow(); // 使用台北時間
-    const slotDate = startOfDay(date); // 確保使用當天開始時間
-    const [hours] = timeSlot.value.split(':').map(Number);
-    slotDate.setHours(hours, 0, 0, 0);
+    const now = getTaipeiNow();
+    const { start, end } = getSlotDateRange(date, timeSlot.value);
 
-    // 如果時段已過或超出範圍，則不允許點擊
-    if (isBefore(slotDate, now)) return;
+    // 只要時段還沒結束，就允許預約當前區塊
+    if (isBefore(end, now) || end.getTime() <= now.getTime()) return;
     if (!isWithinInterval(date, { start: dateRange.min, end: dateRange.max })) return;
 
-    // 檢查特定時間段是否在冷卻期內
-    if (cooldownSlots && Array.isArray(cooldownSlots)) {
-      // 轉換當前時間段為後端格式 (YYYY-MM-DD-HH:MM)
-      const backendSlotFormat = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
-      
-      if (cooldownSlots.includes(backendSlotFormat)) {
-        return;
-      }
+    if (cooldownSlots?.includes(`${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`)) {
+      return;
     }
 
     const slotId = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
-    
-    // 檢查是否是已預約的時段
-    if (bookedSlots.includes(slotId)) {
-      // 查找是否是自己的預約
-      const bookingDetail = bookingDetails.find((detail: any) => 
-        detail.time_slot === slotId
-      );
-      
-      if (bookingDetail) {
-        // 強化用戶郵箱比較 - 去除空格並轉為小寫
-        const bookingUserEmail = (bookingDetail.user_email || '').trim().toLowerCase();
-        const currentEmail = (currentUserEmail || '').trim().toLowerCase();
-        const isOwnBooking = bookingUserEmail === currentEmail && currentEmail !== '';
-        
-        if (isOwnBooking) {
-          // 是自己的預約，可以取消
-          if (onShowCancelConfirm && bookingDetail) {
-            onShowCancelConfirm(bookingDetail);
-          }
-          return;
-        } else {
-          // 不是自己的預約，不能點擊
-          return;
-        }
-      } else {
-        // 沒有找到詳細信息，為安全起見，拒絕點擊
-        return;
-      }
-    }
 
-    // 計算結束時間（4小時後）
-    const endDate = new Date(slotDate);
-    endDate.setHours(hours + 4, 0, 0, 0);
+    if (bookedSlots.includes(slotId)) {
+      const bookingDetail = bookingDetails.find((detail: any) => detail.time_slot === slotId);
+      if (!bookingDetail) return;
+
+      const bookingUserEmail = (bookingDetail.user_email || '').trim().toLowerCase();
+      const currentEmail = (currentUserEmail || '').trim().toLowerCase();
+      const isOwnBooking = bookingUserEmail === currentEmail && currentEmail !== '';
+
+      if (isOwnBooking && onShowCancelConfirm) {
+        onShowCancelConfirm(bookingDetail);
+      }
+      return;
+    }
 
     setSelectedSlotId(slotId);
     onSelect({
       id: slotId,
       machineId: '1',
       startTime: timeSlot.value,
-      endTime: format(endDate, 'HH:mm'),
+      endTime: format(end, 'HH:mm'),
       isBooked: false,
-      status: '可預約'
+      status: '可預約',
     });
   };
 
   const getSlotStatus = (date: Date, timeSlot: { time: string; value: string }) => {
-    const now = new Date();
-    const slotDate = startOfDay(date); // 確保使用當天開始時間
-    const [hours] = timeSlot.value.split(':').map(Number);
-    slotDate.setHours(hours, 0, 0, 0);
-
-    // 修正格式：確保與後端返回的格式一致 "YYYY-MM-DD-HH:MM"
+    const now = getTaipeiNow();
+    const { end } = getSlotDateRange(date, timeSlot.value);
     const slotId = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
 
     if (!isWithinInterval(date, { start: dateRange.min, end: dateRange.max })) {
-      return { status: '未開放', disabled: true, isOwnBooking: false, isOthersBooking: false };
+      return { status: '不可選', disabled: true, isOwnBooking: false, isOthersBooking: false };
     }
-    if (isBefore(slotDate, now)) {
+
+    if (isBefore(end, now) || end.getTime() <= now.getTime()) {
       return { status: '已過期', disabled: true, isOwnBooking: false, isOthersBooking: false };
     }
-    
-    // 檢查特定時間段是否在冷卻期內
-    if (cooldownSlots && Array.isArray(cooldownSlots)) {
-      // 轉換當前時間段為後端格式 (YYYY-MM-DD-HH:MM)
-      const backendSlotFormat = `${format(date, 'yyyy-MM-dd')}-${timeSlot.value}`;
-      
-      if (cooldownSlots.includes(backendSlotFormat)) {
-        return { status: '冷卻', disabled: true, isOwnBooking: false, isOthersBooking: false };
-      }
+
+    if (cooldownSlots?.includes(slotId)) {
+      return { status: '冷卻中', disabled: true, isOwnBooking: false, isOthersBooking: false };
     }
-    
-    // 檢查是否已被預約
+
     if (bookedSlots.includes(slotId)) {
-      // 查找詳細預約信息
-      const bookingDetail = bookingDetails.find((detail: any) => 
-        detail.time_slot === slotId
-      );
-      
-      if (bookingDetail) {
-        // 強化用戶郵箱比較 - 去除空格並轉為小寫
-        const bookingUserEmail = (bookingDetail.user_email || '').trim().toLowerCase();
-        const currentEmail = (currentUserEmail || '').trim().toLowerCase();
-        const isOwnBooking = bookingUserEmail === currentEmail && currentEmail !== '';
-        
-        if (isOwnBooking) {
-          return { 
-            status: '已預約(可取消)', 
-            disabled: false, // 自己的預約可以點擊取消
-            isOwnBooking: true,
-            isOthersBooking: false,
-            bookingId: bookingDetail.id
-          };
-        } else {
-          // 顯示其他用戶的格式化姓名
-          const displayName = bookingDetail.user_display_name || '已預約';
-          return { 
-            status: displayName, 
-            disabled: true, // 別人的預約不能點擊
-            isOwnBooking: false,
-            isOthersBooking: true
-          };
-        }
-      } else {
-        // 沒有找到詳細信息，為安全起見，設為不可點擊
+      const bookingDetail = bookingDetails.find((detail: any) => detail.time_slot === slotId);
+      if (!bookingDetail) {
         return { status: '已預約', disabled: true, isOwnBooking: false, isOthersBooking: false };
       }
+
+      const bookingUserEmail = (bookingDetail.user_email || '').trim().toLowerCase();
+      const currentEmail = (currentUserEmail || '').trim().toLowerCase();
+      const isOwnBooking = bookingUserEmail === currentEmail && currentEmail !== '';
+
+      if (isOwnBooking) {
+        return {
+          status: '我的預約',
+          disabled: false,
+          isOwnBooking: true,
+          isOthersBooking: false,
+          bookingId: bookingDetail.id,
+        };
+      }
+
+      return {
+        status: bookingDetail.user_display_name || '已預約',
+        disabled: true,
+        isOwnBooking: false,
+        isOthersBooking: true,
+      };
     }
-    
+
     return { status: '可預約', disabled: false, isOwnBooking: false, isOthersBooking: false };
   };
 
   return (
     <div className="overflow-x-auto">
       <div className="min-w-[800px]">
-        {/* 標題列 */}
         <div className="grid grid-cols-8 gap-2 mb-4">
           <div className="font-medium text-gray-500 dark:text-dark-text-secondary">時段</div>
           {weekDates.map((date) => {
@@ -206,18 +173,17 @@ export default function TimeSlotSelector({
                 }`}
               >
                 <div className="text-sm">{format(date, 'M/d')}</div>
-                <div className="text-xs text-gray-500 dark:text-dark-text-secondary">{format(date, 'EEEE', { locale: zhTW })}</div>
+                <div className="text-xs text-gray-500 dark:text-dark-text-secondary">
+                  {format(date, 'EEEE', { locale: zhTW })}
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* 時段格線 */}
-        {timeSlots.map((timeSlot) => (
+        {TIME_SLOTS.map((timeSlot) => (
           <div key={timeSlot.value} className="grid grid-cols-8 gap-2 mb-2">
-            <div className="text-sm text-gray-500 dark:text-dark-text-secondary py-2">
-              {timeSlot.time}
-            </div>
+            <div className="py-2 text-sm text-gray-500 dark:text-dark-text-secondary">{timeSlot.time}</div>
             {weekDates.map((date) => {
               const statusInfo = getSlotStatus(date, timeSlot);
               const { status, disabled, isOwnBooking, isOthersBooking } = statusInfo;
@@ -230,34 +196,39 @@ export default function TimeSlotSelector({
                   onClick={() => handleSlotClick(date, timeSlot)}
                   disabled={disabled}
                   className={`
-                    relative py-2 px-4 rounded-lg text-xs font-medium
-                    transform transition-all duration-200
+                    relative rounded-lg px-4 py-2 text-xs font-medium transition-all duration-200
                     ${
                       disabled
-                        ? status === '冷卻'
-                          ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 cursor-not-allowed hover:shadow-none border-2 border-orange-300 dark:border-orange-500'
+                        ? status === '冷卻中'
+                          ? 'cursor-not-allowed border-2 border-orange-300 bg-orange-100 text-orange-600 dark:border-orange-500 dark:bg-orange-900/30 dark:text-orange-300'
                           : isOwnBooking
-                          ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-800/40 border-2 border-blue-300 dark:border-blue-400'
+                          ? 'cursor-pointer border-2 border-blue-300 bg-blue-100 text-blue-700 dark:border-blue-400 dark:bg-blue-900/30 dark:text-blue-200'
                           : isOthersBooking
-                          ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 cursor-not-allowed hover:shadow-none border-2 border-red-200 dark:border-red-400'
-                          : 'bg-gray-100 dark:bg-gray-800/50 text-gray-400 dark:text-gray-500 cursor-not-allowed hover:shadow-none border-2 border-gray-200 dark:border-gray-600'
+                          ? 'cursor-not-allowed border-2 border-red-200 bg-red-50 text-red-600 dark:border-red-400 dark:bg-red-900/30 dark:text-red-300'
+                          : 'cursor-not-allowed border-2 border-gray-200 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800/50 dark:text-gray-500'
                         : isSelected
-                        ? 'bg-primary dark:bg-dark-accent text-white border-2 border-primary dark:border-dark-accent ring-2 ring-primary/30 dark:ring-dark-accent/50 ring-offset-1 dark:ring-offset-dark-bg-secondary scale-105 hover:bg-primary-dark dark:hover:bg-dark-accent-dark shadow-lg dark:shadow-dark-accent/25'
-                        : 'bg-white dark:bg-dark-bg-tertiary border-2 border-gray-200 dark:border-dark-accent/30 hover:border-primary dark:hover:border-dark-accent hover:text-primary dark:hover:text-dark-accent hover:shadow-md dark:hover:shadow-dark-accent/20 hover:-translate-y-0.5 text-gray-700 dark:text-dark-text-primary hover:bg-gray-50 dark:hover:bg-dark-bg-secondary'
+                        ? 'scale-105 border-2 border-primary bg-primary text-white shadow-lg ring-2 ring-primary/30 ring-offset-1 dark:border-dark-accent dark:bg-dark-accent dark:ring-dark-accent/50 dark:ring-offset-dark-bg-secondary'
+                        : 'border-2 border-gray-200 bg-white text-gray-700 hover:-translate-y-0.5 hover:border-primary hover:bg-gray-50 hover:text-primary hover:shadow-md dark:border-dark-accent/30 dark:bg-dark-bg-tertiary dark:text-dark-text-primary dark:hover:border-dark-accent dark:hover:bg-dark-bg-secondary dark:hover:text-dark-accent dark:hover:shadow-dark-accent/20'
                     }
                   `}
-                  title={isOthersBooking ? `已被 ${status} 預約` : status}
+                  title={isOthersBooking ? `由 ${status} 預約` : status}
                 >
                   <span className="relative z-10 leading-tight">{status}</span>
-                  {status === '冷卻' && (
-                    <div className="absolute inset-0 bg-orange-200 dark:bg-orange-600/20 opacity-30 rounded-lg"></div>
+                  {status === '冷卻中' && (
+                    <div className="absolute inset-0 rounded-lg bg-orange-200 opacity-30 dark:bg-orange-600/20" />
                   )}
                 </button>
               );
             })}
           </div>
         ))}
+
+        {usageInfo?.has_usage_limit && (
+          <div className="mt-4 text-xs text-gray-500 dark:text-dark-text-secondary">
+            目前機器有使用次數限制，部分時段可能因冷卻規則而無法預約。
+          </div>
+        )}
       </div>
     </div>
   );
-} 
+}

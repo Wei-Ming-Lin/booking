@@ -3,7 +3,6 @@ import ConditionalNavbar from '@/components/ConditionalNavbar';
 import './globals.css';
 import { Inter } from 'next/font/google';
 
-// 導入蘋果風格字體
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -12,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: '機器預約系統',
-  description: 'AI GPU 資源預約平台',
+  title: '預約系統',
+  description: '預約平台',
   icons: {
     icon: [
       {
@@ -46,8 +45,8 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' }
+    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', color: '#020617' },
   ],
 };
 
@@ -59,34 +58,27 @@ export default function RootLayout({
   return (
     <html lang="zh-TW" suppressHydrationWarning className={inter.variable}>
       <head>
-        {/* 預載蘋果字體 */}
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className={`
-        ${inter.className} 
-        font-sans antialiased
-        bg-gradient-to-br from-white via-purple-50/30 to-blue-50/50
-        dark:bg-gradient-to-br dark:from-black dark:via-gray-900 dark:to-gray-800
-        text-purple-900 dark:text-white
-        transition-colors duration-300
-      `}>
-        {/* 液態背景效果 */}
-        <div className="fixed inset-0 z-liquid-bg overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-full blur-3xl animate-liquid-flow" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-accent/5 to-primary/5 rounded-full blur-2xl animate-liquid-wave" />
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-r from-secondary/3 to-accent/3 rounded-full blur-xl animate-float" />
+      <body
+        className={`
+          ${inter.className}
+          bg-slate-50 text-slate-900
+          dark:bg-slate-950 dark:text-slate-100
+          font-sans antialiased transition-colors duration-300
+        `}
+      >
+        <div className="fixed inset-0 z-liquid-bg hidden overflow-hidden pointer-events-none dark:block starfield-bg">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_35%),radial-gradient(circle_at_18%_80%,_rgba(14,165,233,0.12),_transparent_26%),radial-gradient(circle_at_82%_18%,_rgba(168,85,247,0.14),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#08111f_48%,_#020617_100%)]" />
+          <div className="absolute inset-0 aurora-layer aurora-layer-one" />
+          <div className="absolute inset-0 aurora-layer aurora-layer-two" />
+          <div className="absolute inset-0 starfield starfield-dense" />
+          <div className="absolute inset-0 starfield starfield-mid" />
         </div>
 
         <Providers>
@@ -98,4 +90,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} 
+}

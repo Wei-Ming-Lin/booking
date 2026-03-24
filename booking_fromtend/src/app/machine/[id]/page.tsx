@@ -718,7 +718,7 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   // 如果還在載入中或權限檢查未完成，顯示載入頁面
   if (isLoading || !accessCheckCompleted) {
     return (
-      <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
+      <div className="min-h-screen pt-5 pb-10 bg-transparent">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-12">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary dark:border-dark-accent border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
@@ -733,7 +733,7 @@ export default function MachinePage({ params }: { params: { id: string } }) {
 
   if (!finalMachine) {
     return (
-      <div className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
+      <div className="min-h-screen pt-5 pb-10 bg-transparent">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg shadow-sm dark:shadow-dark-bg-primary/20 p-6 border dark:border-dark-border">
             <h1 className="text-3xl font-bold text-text-primary dark:text-dark-text-primary mb-4">找不到機器</h1>
@@ -753,13 +753,13 @@ export default function MachinePage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
+    <main className="min-h-screen pt-5 pb-10 bg-transparent">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* 機器資訊 */}
         <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg shadow-sm p-6 mb-8 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 dark:shadow-dark-bg-tertiary/20 border-2 border-transparent dark:border-dark-accent/30 hover:border-primary/30 dark:hover:border-dark-accent/60">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between">
             <div className="flex-1">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
                 <h1 className="text-3xl font-bold text-text-primary dark:text-dark-text-primary group">
                   {finalMachine.name}
                   <div className="h-0.5 w-0 group-hover:w-full bg-secondary dark:bg-dark-accent transition-all duration-300" />
@@ -992,7 +992,7 @@ export default function MachinePage({ params }: { params: { id: string } }) {
                     可用時段
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary dark:bg-dark-accent transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                   </h3>
-                  <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-3">
                     {isRefreshing && (
                       <div className="flex items-center text-primary">
                         <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2"></div>

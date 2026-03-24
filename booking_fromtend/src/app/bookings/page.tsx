@@ -260,7 +260,7 @@ export default function BookingsPage() {
 
   if (!session) {
     return (
-      <main className="min-h-screen pt-20 pb-10 bg-muted dark:bg-dark-bg-primary">
+      <main className="min-h-screen pt-20 pb-10 bg-transparent">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-text-primary dark:text-dark-text-primary mb-4">請先登入</h1>
@@ -274,7 +274,7 @@ export default function BookingsPage() {
   const calendarDays = generateCalendarDays();
 
   return (
-    <main className="min-h-screen pt-5 pb-10 bg-muted dark:bg-dark-bg-primary">
+    <main className="min-h-screen pt-5 pb-10 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col space-y-6">
           {/* 頁面標題和月份選擇器 */}
@@ -287,7 +287,7 @@ export default function BookingsPage() {
             
             {/* 月份選擇器 */}
             <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg p-4 shadow-sm dark:shadow-dark-bg-primary/20 border dark:border-dark-border">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   onClick={handlePrevMonth}
                   className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-dark-text-primary bg-surface dark:bg-dark-bg-tertiary border border-gray-300 dark:border-dark-border rounded-md transition-all duration-200 hover:bg-gray-50 dark:hover:bg-dark-bg-secondary hover:border-primary dark:hover:border-dark-accent"
@@ -339,7 +339,7 @@ export default function BookingsPage() {
           {/* 機器選擇器 */}
           {!isLoading && !error && machines.length > 0 && (
             <div className="bg-surface dark:bg-dark-bg-secondary rounded-lg p-4 shadow-sm dark:shadow-dark-bg-primary/20 border-2 border-gray-200 dark:border-dark-border">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
                 <h3 className="text-sm font-medium text-text-primary dark:text-dark-text-primary">機器篩選</h3>
                 <button
                   onClick={toggleAllMachines}
@@ -392,17 +392,18 @@ export default function BookingsPage() {
               ) : (
                 <>
                   {/* 星期標題 */}
-                  <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b-2 border-gray-200 dark:border-dark-border">
-                    {['週一', '週二', '週三', '週四', '週五', '週六', '週日'].map((day) => (
-                      <div key={day} className="p-3 text-center text-sm font-medium text-gray-600 dark:text-dark-text-primary border-r border-gray-200 dark:border-dark-border last:border-r-0">
-                        {day}
+                  <div className="overflow-x-auto apple-scrollbar">
+                    <div className="min-w-[52rem]">
+                      <div className="grid grid-cols-7 bg-gray-50 dark:bg-dark-bg-primary border-b-2 border-gray-200 dark:border-dark-border">
+                        {['週一', '週二', '週三', '週四', '週五', '週六', '週日'].map((day) => (
+                          <div key={day} className="p-3 text-center text-sm font-medium text-gray-600 dark:text-dark-text-primary border-r border-gray-200 dark:border-dark-border last:border-r-0">
+                            {day}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
 
-              {/* 日曆網格 */}
-              <div className="grid grid-cols-7">
-                {calendarDays.map((day, index) => {
+                      <div className="grid grid-cols-7">
+                        {calendarDays.map((day, index) => {
                   const dayBookings = getBookingsForDate(day);
                   const isCurrentMonth = isSameMonth(day, selectedDate);
                   const isDayToday = isToday(day);
@@ -503,8 +504,10 @@ export default function BookingsPage() {
                        </div>
                     </div>
                   );
-                })}
-              </div>
+                        })}
+                      </div>
+                    </div>
+                  </div>
                 </>
               )}
             </div>
@@ -513,14 +516,14 @@ export default function BookingsPage() {
       </div>
       {showDateDetails && selectedDateDetails && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6"
           onClick={() => setShowDateDetails(false)}
         >
           <div
-            className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden border-2 border-gray-200 dark:border-dark-border"
+            className="bg-white dark:bg-dark-bg-secondary rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-hidden border-2 border-gray-200 dark:border-dark-border"
             onClick={e => e.stopPropagation()}
           >
-            <div className="px-6 py-4 border-b-2 border-gray-200 dark:border-dark-border flex items-center justify-between bg-gray-50 dark:bg-dark-bg-primary">
+            <div className="px-6 py-4 border-b-2 border-gray-200 dark:border-dark-border flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-gray-50 dark:bg-dark-bg-primary">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-dark-text-primary">
                   {format(selectedDateDetails.date, 'yyyy年M月d日 (EEEE)', { locale: zhTW })} 預約詳情
@@ -550,7 +553,7 @@ export default function BookingsPage() {
                 <div className="space-y-4">
                   {selectedDateDetails.bookings.map((booking) => (
                     <div key={booking.id} className="bg-gray-50 dark:bg-dark-bg-primary rounded-lg p-4 border-2 border-gray-200 dark:border-dark-border hover:border-dark-accent/30 transition-all duration-200 shadow-sm">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                           <div className="font-medium text-gray-900 dark:text-dark-text-primary">{booking.machine_name}</div>
                           <div className="text-sm text-gray-600 dark:text-dark-text-secondary">{formatTimeSlot(booking.time_slot)}</div>
